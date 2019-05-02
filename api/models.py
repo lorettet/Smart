@@ -12,6 +12,15 @@ class User(models.Model):
     def __str__(self):
         return self.firstname+' '+self.lastname+' ('+self.email+')'
 
+    def getJson(self):
+        json = {'firstname':self.firstname,
+                'lastname':self.lastname,
+                'email':self.email,
+                }
+        return json
+
+
+
     firstname = models.CharField(max_length=30,null=False)
     lastname = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
