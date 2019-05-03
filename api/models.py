@@ -5,8 +5,8 @@ from django import forms
 
 class Store(models.Model):
     @classmethod
-    def create(cls, name, email, password, lat, lon):
-        store = cls(name=name, email=email, password=password, lat=lat, lon=lon)
+    def create(cls, name, email, password, lat, lon, city):
+        store = cls(name=name, email=email, password=password, lat=lat, lon=lon, city=city)
         return store
 
     def __str__(self):
@@ -21,6 +21,7 @@ class Store(models.Model):
                 'id':self.id,
                 'name':self.name,
                 'email':self.email,
+                'city':self.city,
                 'lat':self.lat,
                 'lon':self.lon,
                 }
@@ -29,6 +30,7 @@ class Store(models.Model):
     name = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
+    city = models.CharField(max_length=20,null=False)
     lat = models.DecimalField(max_digits=15, decimal_places=6)
     lon = models.DecimalField(max_digits=15, decimal_places=6)
 
