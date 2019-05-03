@@ -10,18 +10,26 @@ class Store(models.Model):
         return store
 
     def __str__(self):
-        return self.name + '('+self.email+')'
+        return self.name + ' ('+self.email+', '+str(self.lat)+' '+str(self.lon)+')'
 
     def updateLatLon(self, lat, lon):
         self.__lat = lat
         self.__lon = lon
+
+    def getJson(self):
+        json = {'type':'store',
+                'name':self.name,
+                'email':self.email,
+                'lat':self.lat,
+                'lon':self.lon,
+                }
+        return json
     
     name = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
-    
-    lat = models.FloatField(blank=True, null=True)
-    lon = models.FloatField(blank=True, null=True)
+    lat = models.DecimalField(max_digits=15, decimal_places=8)
+    lon = models.DecimalField(max_digits=15, decimal_places=8)
 
 class Client(models.Model):
     @classmethod
@@ -35,14 +43,29 @@ class Client(models.Model):
     def __str__(self):
         return self.firstname+' '+self.lastname+' ('+self.email+')'
 
+    def getJson(self):
+        json = {'type':'client',
+                'firstname':self.firstname,
+                'lastname':self.lastname,
+                'email':self.email,
+                }
+        return json
+
     firstname = models.CharField(max_length=30,null=False)
     lastname = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
-
     points = models.ManyToManyField(Store, through='FidelityPoints')
 
 class FidelityPoints(models.Model):
+    @classmethod
+    def create(cls, client, store, points):
+        fidelityPoints = cls(client=client, store=store, point=points)
+        return fidelityPoints
+
+    def __str__(self):
+        return str(self.client)+' ('+self.store.name+' : '+str(self.points)+')'
+
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
@@ -54,7 +77,7 @@ class Category(models.Model):
         return client
 
     def __str__(self):
-        return self.name+'('+self.description+')'
+        return self.name+' ('+self.description+')'
 
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)
@@ -66,7 +89,7 @@ class Product(models.Model):
         return client
 
     def __str__(self):
-        return self.name+'('+self.description+','+str(self.category)+','+str(self.store)+')'
+        return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+')'
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,null=False)
@@ -83,7 +106,7 @@ class ProductModel(models.Model):
         return client
 
     def __str__(self):
-        return self.name+'('+self.description+','+str(self.category)+')'
+        return self.name+' ('+self.description+', '+self.category.name+')'
 
 
     category = models.OneToOneField(
