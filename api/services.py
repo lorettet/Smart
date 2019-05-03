@@ -12,10 +12,17 @@ def login(email, password):
     except Store.DoesNotExist:
         return None
 
-
-def createUser(firstname,lastname,email,password):
-    u = User.create(firstname,lastname,email,password)
-    u.save()
-
 def getAllStores():
     return {'stores':[store.getJson() for store in Store.objects.all()]}
+
+def getStoreProducts(store):
+    try:
+        s = Store.objects.get(id=store)
+        return [product.getJson() for product in Product.objects.filter(store=s)]
+    except Store.DoesNotExist:
+        return None
+
+    
+
+
+    

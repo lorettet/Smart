@@ -28,8 +28,8 @@ class Store(models.Model):
     name = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
-    lat = models.DecimalField(max_digits=15, decimal_places=8)
-    lon = models.DecimalField(max_digits=15, decimal_places=8)
+    lat = models.DecimalField(max_digits=15, decimal_places=6)
+    lon = models.DecimalField(max_digits=15, decimal_places=6)
 
 class Client(models.Model):
     @classmethod
@@ -60,7 +60,7 @@ class Client(models.Model):
 class FidelityPoints(models.Model):
     @classmethod
     def create(cls, client, store, points):
-        fidelityPoints = cls(client=client, store=store, point=points)
+        fidelityPoints = cls(client=client, store=store, points=points)
         return fidelityPoints
 
     def __str__(self):
@@ -90,6 +90,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+')'
+
+    def getJson(self):
+        json = {'name':self.name,
+                'description':self.description,
+                'category':self.category.name,
+                }
+        return json
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,null=False)

@@ -28,6 +28,29 @@ def login(request):
     return JsonResponse(json)
 
 
+def get_store_products(request, storeId):
+    '''
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    try:
+        store = request.POST['store']
+    except KeyError:
+        return JsonResponse(errorJson('require field : store'))
+    '''
+
+    products = serv.getStoreProducts(storeId)
+    print(products)
+
+    if products is None:
+        return JsonResponse(errorJson('id de magasin inexistant'))
+
+
+    json = {}
+    json['store'] = storeId
+    json['products'] = products
+
+    return JsonResponse(json)
 
 def get_stores_all(request):
     return JsonResponse(serv.getAllStores())
