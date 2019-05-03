@@ -104,7 +104,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)
-    store = models.OneToOneField(
+    store = models.ForeignKey(
         Store,
         on_delete=models.CASCADE
     )
@@ -119,7 +119,7 @@ class ProductModel(models.Model):
         return self.name+' ('+self.description+', '+self.category.name+')'
 
 
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE
     )

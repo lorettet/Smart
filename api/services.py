@@ -24,3 +24,12 @@ def getFidelityPoints(client_id,store_id):
 
 def getAllFidelityPoints(client_id):
     return {'points':[{'store':x.store.getJson(),'points':x.points} for x in list(FidelityPoints.objects.filter(client=client_id))]}
+
+
+def getStoreProducts(store_id):
+    try:
+        s = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return None
+
+    return [product.getJson() for product in Product.objects.filter(store=s)]
