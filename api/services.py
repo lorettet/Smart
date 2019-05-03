@@ -13,9 +13,11 @@ def login(email, password):
         return None
 
 
-def createUser(firstname,lastname,email,password):
-    u = User.create(firstname,lastname,email,password)
-    u.save()
-
 def getAllStores():
     return {'stores':[store.getJson() for store in Store.objects.all()]}
+
+def getFidelityPoints(client_id,store_id):
+    try:
+        return FidelityPoints.objects.get(client=client_id,store=store_id).points
+    except FidelityPoints.DoesNotExist:
+        return 0
