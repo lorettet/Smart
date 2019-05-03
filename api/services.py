@@ -21,3 +21,6 @@ def getFidelityPoints(client_id,store_id):
         return FidelityPoints.objects.get(client=client_id,store=store_id).points
     except FidelityPoints.DoesNotExist:
         return 0
+
+def getAllFidelityPoints(client_id):
+    return {'points':[{'store':x.store.getJson(),'points':x.points} for x in list(FidelityPoints.objects.filter(client=client_id))]}

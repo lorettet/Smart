@@ -53,3 +53,9 @@ def getFidelityPoints(request,store_id):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
     return HttpResponse(serv.getFidelityPoints(request.session['user_id'],store_id))
+
+@require_http_methods(['POST'])
+def getAllFidelityPoints(request):
+    if(request.session['user_type']=='store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+    return JsonResponse(serv.getAllFidelityPoints(request.session['user_id']))
