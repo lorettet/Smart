@@ -27,6 +27,21 @@ def login(request):
     request.session['user_type']=json['type']
     return JsonResponse(json)
 
+@require_http_methods(['POST'])
+def get_store_products(request, storeId):
+
+    products = serv.getStoreProducts(storeId)
+    print(products)
+
+    if products is None:
+        return JsonResponse(errorJson('id de magasin inexistant'))
+
+
+    json = {}
+    json['store'] = storeId
+    json['products'] = products
+
+    return JsonResponse(json)
 
 @require_http_methods(['POST'])
 def get_stores_all(request):
