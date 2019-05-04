@@ -17,7 +17,8 @@ class Store(models.Model):
         self.__lon = lon
 
     def getJson(self):
-        json = {'type':'store',
+        json = {
+                'type':'store',
                 'id':self.id,
                 'name':self.name,
                 'email':self.email,
@@ -47,7 +48,9 @@ class Client(models.Model):
         return self.firstname+' '+self.lastname+' ('+self.email+')'
 
     def getJson(self):
-        json = {'type':'client',
+        json = {
+                'type':'client',
+                'id':self.id,
                 'firstname':self.firstname,
                 'lastname':self.lastname,
                 'email':self.email,
@@ -87,27 +90,28 @@ class Category(models.Model):
 
 class Product(models.Model):
     @classmethod
-    def create(cls, name, description, category, store):
-        client = cls(name=name, description=description, category=category, store=store)
+    def create(cls, name, description, category, store, points):
+        client = cls(name=name, description=description, category=category, store=store, points=points)
         return client
 
     def __str__(self):
-        return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+')'
+        return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+', '+str(self.points)+')'
 
     def getJson(self):
-        json = {'name':self.name,
+        json = {
+                'id':self.id,
+                'name':self.name,
                 'description':self.description,
                 'category':self.category.name,
+                'points':self.points,
                 }
         return json
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)
-    store = models.ForeignKey(
-        Store,
-        on_delete=models.CASCADE
-    )
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
 
 class ProductModel(models.Model):
     @classmethod
@@ -119,9 +123,6 @@ class ProductModel(models.Model):
         return self.name+' ('+self.description+', '+self.category.name+')'
 
 
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE
-    )
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)

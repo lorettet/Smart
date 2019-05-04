@@ -59,3 +59,73 @@ def getAllFidelityPoints(request):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
     return JsonResponse(serv.getAllFidelityPoints(request.session['user_id']))
+
+
+@require_http_methods(['POST'])
+def add_product_to_store(request):
+    if(request.session['user_type']=='client'):
+        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+
+    try:
+        store_id = request.session['user_id']
+        
+        pName = request.POST['product_name']
+        pDescription = request.POST['product_description']
+        pCategory = request.POST['product_category']
+        pPoints = request.POST['product_points']
+
+    except KeyError:
+        return JsonResponse(errorJson('require fields : user_id(session), product_name, product_description, product_category, product_points'),status=400)
+
+    product = serv.addProduct(pName,pDescription,pCategory,store_id,pPoints)
+    if product is None:
+        return HttpResponse('false')
+
+    json = product.getJson()
+    return JsonResponse(json)
+
+
+@require_http_methods(['POST'])
+def update_product(request):
+    if(request.session['user_type']=='client'):
+        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+
+    try:
+        store_id = request.session['user_id']
+        
+        product_id = request.POST['product_id']
+        pName = request.POST['product_name']
+        pDescription = request.POST['product_description']
+        pCategory = request.POST['product_category']
+        pPoints = request.POST['product_points']
+
+    except KeyError:
+        return JsonResponse(errorJson('require fields : user_id(session), product_id, product_name, product_description, product_category, product_points'),status=400)
+
+    product = serv.updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints)
+    if product is None:
+        return HttpResponse('false')
+
+    json = product.getJson()
+    return JsonResponse(json)
+
+
+@require_http_methods(['POST'])
+def remove_product_from_store(request):
+    if(request.session['user_type']=='client'):
+        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+
+    try:
+        store_id = request.session['user_id']
+        
+        product_id = request.POST['product_id']
+
+    except KeyError:
+        return JsonResponse(errorJson('require fields : user_id(session), product_id'),status=400)
+
+    deletion = serv.removeProduct(product_id,store_id)
+    if deletion is None:
+        return HttpResponse('false')
+
+    json = deletion.getJson()
+    return JsonResponse(json)
