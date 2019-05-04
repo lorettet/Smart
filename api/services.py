@@ -38,7 +38,7 @@ def getStoreProducts(store_id):
 def addProduct(pName,pDescription,pCategory,store_id,pPoints):
     try:
         store = Store.objects.get(id=store_id)
-        p = Product.create(pName,pDescription,pCategory,store,pPoints)
+        p = Product.objects.create(pName,pDescription,pCategory,store,pPoints)
         p.save()
     except:
         return None
@@ -79,3 +79,24 @@ def removeProduct(product_id,store_id):
         return p.delete()
     else:
         return None
+
+
+def creditClient(store_id,client_id,points):
+    try:
+        s = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return None
+    
+    try:
+        c = Client.objects.get(id=client_id)
+    except Client.DoesNotExist:
+        return None
+
+    fp = FidelityPoints.objects.get_or_create(store=s,client=c)
+
+    fp.points += points
+    
+    fp.save()
+
+    return fp.points
+    

@@ -129,3 +129,24 @@ def remove_product_from_store(request):
 
     json = deletion.getJson()
     return JsonResponse(json)
+
+
+@require_http_methods(['POST'])
+def credit(request):
+    if(request.session['user_type']=='client'):
+        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+
+    try:
+        store_id = request.session['user_id']
+        
+        client_id = request.POST['client_id']
+        points = request.POST['points']
+
+    except KeyError:
+        return JsonResponse(errorJson('require fields : user_id(session), client_id, points'),status=400)
+
+    creditSuccessfull = serv.creditClient(store_id,client_id,points)
+    if creditSuccessfull is None:
+        return HttpResponse('false')
+    else:
+        return HttpResponse('true')

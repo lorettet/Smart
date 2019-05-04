@@ -12,4 +12,6 @@ urlpatterns = [
     path('me/products/add', views.add_product_to_store, name='addProductToStore'),
     path('me/products/update', views.update_product, name='updateProduct'),
     path('me/products/remove', views.remove_product_from_store, name='removeProductFromStore'),
+    path('transaction/credit', views.credit, name='credit'),
+    #path('transaction/debit', views.debit, name='debit'),
 ]
