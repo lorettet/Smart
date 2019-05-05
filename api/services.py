@@ -35,10 +35,10 @@ def getStoreProducts(store_id):
     return [product.getJson() for product in Product.objects.filter(store=s)]
 
 
-def addProduct(pName,pDescription,pCategory,store_id,pPoints):
+def addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity):
     try:
         store = Store.objects.get(id=store_id)
-        p = Product.objects.create(pName,pDescription,pCategory,store,pPoints)
+        p = Product.objects.create(pName,pDescription,pCategory,store,pPoints,pQuantity)
         p.save()
     except:
         return None
@@ -46,7 +46,7 @@ def addProduct(pName,pDescription,pCategory,store_id,pPoints):
     return p
 
 
-def updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints):
+def updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints,pQuantity):
     try:
         p = Product.objects.get(id=product_id)
     except Product.DoesNotExist:
@@ -61,6 +61,7 @@ def updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints):
             return None        
         p.category = c
         p.points = pPoints
+        p.quantity = pQuantity
 
         p.save()
     else:

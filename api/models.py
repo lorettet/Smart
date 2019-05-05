@@ -90,12 +90,12 @@ class Category(models.Model):
 
 class Product(models.Model):
     @classmethod
-    def create(cls, name, description, category, store, points):
-        client = cls(name=name, description=description, category=category, store=store, points=points)
+    def create(cls, name, description, category, store, points, quantity):
+        client = cls(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
         return client
 
     def __str__(self):
-        return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+', '+str(self.points)+')'
+        return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+', '+str(self.points)+', '+str(self.quantity)+')'
 
     def getJson(self):
         json = {
@@ -104,6 +104,7 @@ class Product(models.Model):
                 'description':self.description,
                 'category':self.category.name,
                 'points':self.points,
+                'quantity':self.quantity,
                 }
         return json
 
@@ -112,6 +113,7 @@ class Product(models.Model):
     description = models.CharField(max_length=100,null=False)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
 
 class ProductModel(models.Model):
     @classmethod

@@ -73,11 +73,12 @@ def add_product_to_store(request):
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
         pPoints = request.POST['product_points']
+        pQuantity = request.POST['product_quantity']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), product_name, product_description, product_category, product_points'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(session), product_name, product_description, product_category, product_points, product_quantity'),status=400)
 
-    product = serv.addProduct(pName,pDescription,pCategory,store_id,pPoints)
+    product = serv.addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity)
     if product is None:
         return HttpResponse('false')
 
@@ -98,11 +99,12 @@ def update_product(request):
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
         pPoints = request.POST['product_points']
+        pQuantity = request.POST['product_quantity']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), product_id, product_name, product_description, product_category, product_points'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(session), product_id, product_name, product_description, product_category, product_points, product_quantity'),status=400)
 
-    product = serv.updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints)
+    product = serv.updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints,pQuantity)
     if product is None:
         return HttpResponse('false')
 
