@@ -5,16 +5,12 @@ from django import forms
 
 class Store(models.Model):
     @classmethod
-    def create(cls, name, email, password, lat, lon, city):
-        store = cls(name=name, email=email, password=password, lat=lat, lon=lon, city=city)
+    def create(cls, name, email, password, city, code, address, lat, lon):
+        store = cls(name=name, email=email, password=password, city=city, code=code, address=address, lat=lat, lon=lon)
         return store
 
     def __str__(self):
-        return self.name + ' ('+self.email+', '+str(self.lat)+' '+str(self.lon)+')'
-
-    def updateLatLon(self, lat, lon):
-        self.__lat = lat
-        self.__lon = lon
+        return self.name + ' ('+self.email+', '+self.city+', '+self.code+', '+self.address+', '+str(self.lat)+' '+str(self.lon)+')'
 
     def getJson(self):
         json = {
@@ -23,6 +19,8 @@ class Store(models.Model):
                 'name':self.name,
                 'email':self.email,
                 'city':self.city,
+                'code':self.code,
+                'address':self.address,
                 'lat':self.lat,
                 'lon':self.lon,
                 }
@@ -32,6 +30,8 @@ class Store(models.Model):
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
     city = models.CharField(max_length=20,null=False)
+    code = models.CharField(max_length=10,null=False)
+    address = models.CharField(max_length=40,null=False)
     lat = models.DecimalField(max_digits=15, decimal_places=6)
     lon = models.DecimalField(max_digits=15, decimal_places=6)
 
