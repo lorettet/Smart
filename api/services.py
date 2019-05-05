@@ -12,6 +12,13 @@ def login(email, password):
     except Store.DoesNotExist:
         return None
 
+def getStore(store_id):
+    try:
+        s = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return None
+
+    return s.getJson()
 
 def getAllStores():
     return {'stores':[store.getJson() for store in Store.objects.all()]}

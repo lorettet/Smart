@@ -36,7 +36,6 @@ def get_store_products(request, storeId):
     if products is None:
         return JsonResponse(errorJson('id de magasin inexistant'))
 
-
     json = {}
     json['store'] = storeId
     json['products'] = products
@@ -46,6 +45,24 @@ def get_store_products(request, storeId):
 @require_http_methods(['POST'])
 def get_stores_all(request):
     return JsonResponse(serv.getAllStores())
+
+@require_http_methods(['POST'])
+def get_store_infos(request,store_id):
+    if(request.session['user_type']=='store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+    
+    store = serv.getStore(store_id)
+    if store is None:
+        return JsonResponse(errorJson('id de magasin inexistant'))
+    products = serv.getStoreProducts(storeId)
+    fp = serv.getFidelityPoints(request.session['user_id'],store_id)
+
+    json = {}
+    json['store'] = store
+    json['products'] = products
+    json['fidelityPoints'] = fp
+
+    return JsonResponse(json)
 
 
 @require_http_methods(['POST'])
