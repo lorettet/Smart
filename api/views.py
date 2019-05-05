@@ -54,7 +54,7 @@ def get_store_infos(request,store_id):
     store = serv.getStore(store_id)
     if store is None:
         return JsonResponse(errorJson('id de magasin inexistant'))
-    products = serv.getStoreProducts(storeId)
+    products = serv.getStoreProducts(store_id)
     fp = serv.getFidelityPoints(request.session['user_id'],store_id)
 
     json = {}
