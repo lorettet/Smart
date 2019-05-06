@@ -13,7 +13,7 @@ INSERT INTO api_client VALUES(7,'m.c@exemple.fr','pass','Martin','Gaboriaud',NUL
 -- Store
 INSERT INTO api_store VALUES(2,'ninkasi@ninkasi.fr','pass','Ninkasi',45.7786604	,4.8717538,'Villeurbanne','2 Rue Léon Fabre','69100');
 INSERT INTO api_store VALUES(3,'carrefour@carrefour.fr','pass','carrefour',45.775863200000003415,4.8693919000000001062,'Villeurbanne','61 Avenue Roger Salengro','69100');
-INSERT INTO api_store VALUES(4,'largot@largot.fr','pass','L\'Argot',45.766958999999999948,4.853874300000000197,'Lyon','132 Rue Bugeaud','69006');
+INSERT INTO api_store VALUES(4,'largot@largot.fr','pass','L''Argot',45.766958999999999948,4.853874300000000197,'Lyon','132 Rue Bugeaud','69006');
 INSERT INTO api_store VALUES(5,'ssushi@sshusi.fr','pass','S-SUSHI',45.768209400000003485,45.768209400000003485,'Lyon','23 Rue de Sèze','69006');
 INSERT INTO api_store VALUES(6,'cafe203@cafe203.fr','pass','Cafe 203',45.7665855,4.8353581,'Lyon','9 Rue du Garet','69001');
 INSERT INTO api_store VALUES(7,'leverdi@leverdi.fr','pass','Restaurant Le Verdi',45.7680629,4.854828,'Lyon','13 Boulevard des Brotteaux','69006');
@@ -21,11 +21,11 @@ INSERT INTO api_store VALUES(8,'lahucheauxpains@lahucheauxpains.fr','pass','La H
 
 
 -- Categories
-INSERT INTO api_category VALUES(1,'Pain','C\'est juste du pain hein...');
+INSERT INTO api_category VALUES(1,'Pain','C''est juste du pain hein...');
 INSERT INTO api_category VALUES(2,'Repas','Assortiment');
 INSERT INTO api_category VALUES(3,'Sushi','Riz gluant');
 INSERT INTO api_category VALUES(4,'Viennoiserie','Produit de Vienne (Autriche)');
-INSERT INTO api_category VALUES(5,'Biere','Boisson à base malte d\'orge');
+INSERT INTO api_category VALUES(5,'Biere','Boisson à base malte d''orge');
 
 
 -- Points de fidelite
@@ -50,12 +50,6 @@ INSERT INTO api_product VALUES(4,'Croustilune','Viennoiserie en forme de lune',4
 -- Transactions
 --CREATE TABLE IF NOT EXISTS "api_transaction" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "validatedOn" date NULL, "client_id" integer NOT NULL REFERENCES "api_client" ("id") DEFERRABLE INITIALLY DEFERRED, "store_id" integer NOT NULL REFERENCES "api_store" ("id") DEFERRABLE INITIALLY DEFERRED);
 
-CREATE INDEX "api_fidelitypoints_client_id_d7f33a1b" ON "api_fidelitypoints" ("client_id");
-CREATE INDEX "api_fidelitypoints_store_id_1c192f5c" ON "api_fidelitypoints" ("store_id");
-CREATE INDEX "api_product_category_id_a2b9d1e7" ON "api_product" ("category_id");
-CREATE INDEX "api_product_store_id_717ecb17" ON "api_product" ("store_id");
-CREATE INDEX "api_productmodel_category_id_079aa2ed" ON "api_productmodel" ("category_id");
-CREATE INDEX "api_transaction_client_id_2c09d796" ON "api_transaction" ("client_id");
-CREATE INDEX "api_transaction_store_id_1badd67f" ON "api_transaction" ("store_id");
+
 COMMIT;
 
