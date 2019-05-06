@@ -63,7 +63,7 @@ class Client(models.Model):
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
-    code = models.CharField(max_length=40,null=True)
+    code = models.CharField(max_length=70,null=True)
     generatedOn = models.DateField(null=True)
 
 class FidelityPoints(models.Model):
