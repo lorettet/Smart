@@ -110,16 +110,54 @@ def creditClient(store_id,client_id,points):
 
     fp = FidelityPoints.objects.get_or_create(store=s,client=c)
 
-    fp.points += points
 
-    fp.save()
+    today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+    today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+    t = Transaction.objects.filter(client=c, store=s, generatedOn__range=(today_min, today_max))
 
-    return fp.points
+    if not t:
+        fp.points += points
+        fp.save()
+        return fp.points
+    else:
+        return None
+
+
+
+
+def debitClient(store_id,client_hash,products):
+    try:
+        s = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return None
+
+    try:
+        c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.now()-datetime.timedelta(minutes=10)))
+    except Client.DoesNotExist:
+        return None
+
+    validatedOn = datetime.now()
+
+    try:
+        t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
+
+        for p in products:
+            transactionProduct = p['product']
+            transactionQuantity = p['quantity']
+            tp = TransactionProduct.objects.create(transaction=transaction, product=product, quantity=quantity)
+    except:
+        return None
+
+    return t
+
 
 def generateQRCode(client_id):
-    client = Client.objects.get(id=client_id)
+    try:
+        client = Client.objects.get(id=client_id)
+    except Store.DoesNotExist:
+        return None
 
-    date=datetime.timestamp(datetime.now())
+    date=datetime.timestamp(datetime.now())+10*1000*60
     m = sha1()
     m.update(struct.pack('f',random()))
     hash = m.hexdigest()
@@ -128,4 +166,12 @@ def generateQRCode(client_id):
     client.code = hash
     client.generatedOn = datetime.fromtimestamp(date)
     client.save()
+
     return code
+
+def getPointsForClient(store_id,client_id):
+    try:
+        points = FidelityPoints.objects.get(client=client_id, store=store_id)
+    except FidelityPoints.DoesNotExist:
+        return 0
+    return points.points
