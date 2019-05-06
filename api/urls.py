@@ -15,5 +15,5 @@ urlpatterns = [
     path('me/products/update', views.update_product, name='updateProduct'),
     path('me/products/remove', views.remove_product_from_store, name='removeProductFromStore'),
     path('transaction/credit', views.credit, name='credit'),
-    #path('transaction/debit', views.debit, name='debit'),
+    path('transaction/debit', views.debit, name='debit'),
 ]

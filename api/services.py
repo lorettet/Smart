@@ -110,4 +110,20 @@ def creditClient(store_id,client_id,points):
     fp.save()
 
     return fp.points
+
+
+def debitClient(store_id,client_hash,products):
+    try:
+        s = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return None
+    
+    try:
+        c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.now()-datetime.timedelta(minutes=10)))
+    except Client.DoesNotExist:
+        return None
+
+    t = Transaction.objects.create(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
+
+    return t
     

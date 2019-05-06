@@ -98,7 +98,7 @@ def add_product_to_store(request):
         pQuantity = request.POST['product_quantity']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), product_name, product_description, product_category, product_points, product_quantity'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), product_name, product_description, product_category, product_points, product_quantity'),status=400)
 
     product = serv.addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity)
     if product is None:
@@ -124,7 +124,7 @@ def update_product(request):
         pQuantity = request.POST['product_quantity']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), product_id, product_name, product_description, product_category, product_points, product_quantity'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), product_id, product_name, product_description, product_category, product_points, product_quantity'),status=400)
 
     product = serv.updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints,pQuantity)
     if product is None:
@@ -145,7 +145,7 @@ def remove_product_from_store(request):
         product_id = request.POST['product_id']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), product_id'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), product_id'),status=400)
 
     deletion = serv.removeProduct(product_id,store_id)
     if deletion is None:
@@ -167,7 +167,7 @@ def credit(request):
         points = request.POST['points']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), client_id, points'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), client_id, points'),status=400)
 
     creditSuccessfull = serv.creditClient(store_id,client_id,points)
     if creditSuccessfull is None:
@@ -180,7 +180,7 @@ def credit(request):
 def generateQRCode():
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-
+'''
 
 @require_http_methods(['POST'])
 def debit(request):
@@ -190,15 +190,14 @@ def debit(request):
     try:
         store_id = request.session['user_id']
         
-        client_id = request.POST['client_id']
-        points = request.POST['points']
+        client_hash = request.POST['client_hash']
+        products = json.loads(request.body)
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), client_id, points'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), client_hash, products(JSON)'),status=400)
 
-    creditSuccessfull = serv.creditClient(store_id,client_id,points)
-    if creditSuccessfull is None:
+    debitSuccessfull = serv.debitClient(store_id,client_hash,products)
+    if debitSuccessfull is None:
         return HttpResponse('false')
     else:
         return HttpResponse('true')
-'''

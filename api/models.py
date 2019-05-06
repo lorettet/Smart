@@ -42,9 +42,6 @@ class Client(models.Model):
         client = cls(firstname=firstname, lastname=lastname, email=email, password=password)
         return client
 
-    def updateFidelityPoints(self, points):
-        self.__points.points = points
-
     def __str__(self):
         return self.firstname+' '+self.lastname+' ('+self.email+')'
 
@@ -64,7 +61,7 @@ class Client(models.Model):
     password = models.CharField(max_length=50,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
     code = models.CharField(max_length=70,null=True)
-    generatedOn = models.DateField(null=True)
+    generatedOn = models.DateTimeField(null=True)
 
 class FidelityPoints(models.Model):
     @classmethod
