@@ -4,6 +4,7 @@ import api.services as serv
 from api.errors import *
 from api.models import *
 from django.views.decorators.http import require_http_methods
+import json
 
 
 # Create your views here.
@@ -190,13 +191,13 @@ def debit(request):
     try:
         store_id = request.session['user_id']
 
-        client_hash = request.POST['client_hash']
-        products = json.loads(request.body)
+        #client_hash = request.POST['client_hash']
+        transaction = json.loads(request.body)
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(in session), client_hash, products(JSON)'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), transaction(JSON)'),status=400)
 
-    debitSuccessfull = serv.debitClient(store_id,client_hash,products)
+    debitSuccessfull = serv.debitClient(store_id,transaction)
     if debitSuccessfull is None:
         return HttpResponse('false')
     else:

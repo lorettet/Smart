@@ -1,5 +1,7 @@
 from api.models import *
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
+from django.conf import settings
+from django.utils.timezone import make_aware
 from random import random
 from hashlib import sha1
 import struct
@@ -108,65 +110,101 @@ def creditClient(store_id,client_id):
     except Client.DoesNotExist:
         return None
 
-    fp = FidelityPoints.objects.get_or_create(store=s,client=c)
+    fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)
 
-    today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
-    today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-    t = Transaction.objects.filter(client=c, store=s, generatedOn__range=(today_min, today_max))
+    settings.TIME_ZONE        
 
-    if not t:
+    today_min = make_aware(datetime.combine(date.today(), time.min))
+    print(today_min)
+    today_max = make_aware(datetime.combine(date.today(), time.max))
+    print(today_max)
+    
+    print(fp.lastTimeCredited)
+    if((fp.lastTimeCredited is not None) and (fp.lastTimeCredited>=today_min and fp.lastTimeCredited<=today_max)):
+        return None
+    else:
         fp.points += s.givenPoints
+        fp.lastTimeCredited = make_aware(datetime.now())
         fp.save()
         return fp.points
-    else:
-        return None
 
 
-
-
-def debitClient(store_id,client_hash,products):
+def debitClient(store_id,transaction):
     try:
         s = Store.objects.get(id=store_id)
+        print(s)
     except Store.DoesNotExist:
+        print("no store found")
         return None
 
-    try:
-        c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.datetime.now()-datetime.timedelta(minutes=10)))
-    except Client.DoesNotExist:
+    client_hash = transaction['client_hash']
+
+    settings.TIME_ZONE        
+    debitTime = make_aware(datetime.now())
+
+    clientList = Client.objects.filter(code=client_hash, generatedOn__gte=(debitTime-timedelta(minutes=10)))
+    if not clientList:
+        print("no client found")
         return None
+    else:
+        c = clientList[0]
+        print(c)
+
+    products = transaction['products']
 
     transactionPoints = 0
     for p in products:
-        pId = p['product']
+        pId = p['id']
         pQuantity = p['quantity']
 
         product = Product.objects.get(id=pId)
+        print(product)
+        print(product.points)
+        print(pQuantity)
 
         transactionPoints += (product.points * pQuantity)
 
+    print(transactionPoints)
+
     try:
         fp = FidelityPoints.objects.get(store=s,client=c)
+        print(fp)
     except:
+        print("fp not found")
         return None
 
     if(transactionPoints <= fp.points):
-        validatedOn = datetime.now()
+        #validatedOn = datetime.now()
+        settings.TIME_ZONE        
+        validatedOn = make_aware(datetime.now())
 
         try:
-            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
-
-        
-            for p in products:
-                transactionProduct = p['product']
-                transactionQuantity = p['quantity']
-                tp = TransactionProduct.objects.create(transaction=transaction, product=product, quantity=quantity)
-        
+            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)        
+            t.save()
         except:
+            print("couldn't create transaction")
+            return None
+
+        try:
+            for p in products:
+                transactionProductId = p['id']
+
+                transactionProduct = Product.objects.get(id=pId)
+                transactionQuantity = p['quantity']
+                tp = TransactionProduct.objects.create(transaction=t, product=transactionProduct, quantity=transactionQuantity)
+                tp.save()
+        except:
+            print("couldn't create transactionProducts")
             return None
 
         fp.points -= transactionPoints
+        fp.save()
+
+        c.code = None
+        c.save()
         
     else:
+        print("not enough points")
         return None
 
     return t
@@ -178,7 +216,10 @@ def generateQRCode(client_id):
     except Store.DoesNotExist:
         return None
 
-    date=datetime.timestamp(datetime.now())+10*1000*60
+    settings.TIME_ZONE        
+    genTime = make_aware(datetime.now())
+
+    date=datetime.timestamp(genTime)
     m = sha1()
     m.update(struct.pack('f',random()))
     hash = m.hexdigest()

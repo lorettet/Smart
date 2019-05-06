@@ -77,6 +77,7 @@ class FidelityPoints(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
+    lastTimeCredited = models.DateTimeField(null=True)
 
 class Category(models.Model):
     @classmethod
