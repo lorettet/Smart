@@ -10,6 +10,7 @@ urlpatterns = [
     path('category/all', views.get_categories_all, name='getAllCategories'),
     path('me/points',views.getAllFidelityPoints, name='getAllFidelityPoints'),
     path('me/points/<int:store_id>',views.getFidelityPoints, name='getFidelityPoints'),
+    path('me/client/<int:client_id>/points',views.getPointsForClient, name='getPointsForClient'),
     path('products/<int:storeId>', views.get_store_products, name='getStoreProducts'),
     path('me/products/add', views.add_product_to_store, name='addProductToStore'),
     path('me/products/update', views.update_product, name='updateProduct'),

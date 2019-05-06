@@ -178,11 +178,10 @@ def credit(request):
 
 @require_http_methods(['POST'])
 def generateQRCode(request):
-    pass
-    '''
-    if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-    '''
+    rep = HttpResponse(serv.generateQRCode(request.session['user_id']))
+    if rep == None:
+        return HttpResponse('false')
+    return HttpResponse(rep)
 
 @require_http_methods(['POST'])
 def debit(request):
@@ -191,7 +190,7 @@ def debit(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         client_hash = request.POST['client_hash']
         products = json.loads(request.body)
 
@@ -203,3 +202,15 @@ def debit(request):
         return HttpResponse('false')
     else:
         return HttpResponse('true')
+
+@require_http_methods(['POST'])
+def getPointsForClient(request, client_id):
+    if(request.session['user_type']=='client'):
+        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+
+    try:
+        store_id = request.session['user_id']
+
+    except KeyError:
+        return JsonResponse(errorJson('Need to login'),status=400)
+    return HttpResponse(serv.getPointsForClient(store_id,client_id))

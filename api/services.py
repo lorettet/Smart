@@ -52,7 +52,8 @@ def getStoreProducts(store_id):
 def addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity):
     try:
         store = Store.objects.get(id=store_id)
-        p = Product.objects.create(pName,pDescription,pCategory,store,pPoints,pQuantity)
+        c = Category.objects.get(name=pCategory)
+        p = Product.objects.create(name=pName,description=pDescription,category=c,store=store,points=pPoints,quantity=pQuantity)
         p.save()
     except:
         return None
@@ -113,14 +114,14 @@ def creditClient(store_id,client_id,points):
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
     t = Transaction.objects.filter(client=c, store=s, generatedOn__range=(today_min, today_max))
-    
+
     if not t:
         fp.points += points
         fp.save()
         return fp.points
     else:
         return None
-    
+
 
 
 
@@ -129,7 +130,7 @@ def debitClient(store_id,client_hash,products):
         s = Store.objects.get(id=store_id)
     except Store.DoesNotExist:
         return None
-    
+
     try:
         c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.datetime.now()-datetime.timedelta(minutes=10)))
     except Client.DoesNotExist:
@@ -171,14 +172,14 @@ def debitClient(store_id,client_hash,products):
 
     return t
 
-    
+
 def generateQRCode(client_id):
     try:
         client = Client.objects.get(id=client_id)
     except Store.DoesNotExist:
         return None
 
-    date=datetime.timestamp(datetime.now())
+    date=datetime.timestamp(datetime.now())+10*1000*60
     m = sha1()
     m.update(struct.pack('f',random()))
     hash = m.hexdigest()
@@ -189,3 +190,10 @@ def generateQRCode(client_id):
     client.save()
 
     return code
+
+def getPointsForClient(store_id,client_id):
+    try:
+        points = FidelityPoints.objects.get(client=client_id, store=store_id)
+    except FidelityPoints.DoesNotExist:
+        return 0
+    return points.points

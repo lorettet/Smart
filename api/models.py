@@ -93,7 +93,7 @@ class Category(models.Model):
                 }
         return json
 
-    name = models.CharField(max_length=30,null=False)
+    name = models.CharField(max_length=30,null=False,unique=True)
     description = models.CharField(max_length=100,null=False)
 
 class Product(models.Model):
