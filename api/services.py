@@ -124,7 +124,7 @@ def generateQRCode(client_id):
     hash = m.hexdigest()
 
     code = hash+':'+str(date)
-    client.code = code
+    client.code = hash
     client.generatedOn = datetime.fromtimestamp(date)
     client.save()
     return code
