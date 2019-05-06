@@ -23,6 +23,9 @@ def getStore(store_id):
 def getAllStores():
     return {'stores':[store.getJson() for store in Store.objects.all()]}
 
+def getAllCategories():
+    return {'categories':[category.getJson() for category in Category.objects.all()]}
+
 def getFidelityPoints(client_id,store_id):
     try:
         return FidelityPoints.objects.get(client=client_id,store=store_id).points
