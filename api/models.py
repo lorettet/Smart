@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+import datetime
 
 # Create your models here.
 
@@ -62,6 +63,8 @@ class Client(models.Model):
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
+    code = models.CharField(max_length=40,null=True)
+    generatedOn = models.DateField(null=True)
 
 class FidelityPoints(models.Model):
     @classmethod
@@ -128,3 +131,16 @@ class ProductModel(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)
+
+class Transaction(models.Model):
+    @classmethod
+    def create(cls, name, description, category, store, points, quantity):
+        client = cls(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
+        return client
+
+    def __str__(self):
+        return ''
+
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    validatedOn = models.DateField(null=True)

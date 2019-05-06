@@ -50,7 +50,7 @@ def get_stores_all(request):
 def get_store_infos(request,store_id):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-    
+
     store = serv.getStore(store_id)
     if store is None:
         return JsonResponse(errorJson('id de magasin inexistant'))
@@ -85,7 +85,7 @@ def add_product_to_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
@@ -110,7 +110,7 @@ def update_product(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
@@ -136,7 +136,7 @@ def remove_product_from_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
 
     except KeyError:
@@ -157,7 +157,7 @@ def credit(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         client_id = request.POST['client_id']
         points = request.POST['points']
 
@@ -169,3 +169,10 @@ def credit(request):
         return HttpResponse('false')
     else:
         return HttpResponse('true')
+
+@require_http_methods(['POST'])
+def generateQRCode():
+    if(request.session['user_type']=='store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+
+    
