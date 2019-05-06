@@ -109,11 +109,19 @@ def creditClient(store_id,client_id,points):
 
     fp = FidelityPoints.objects.get_or_create(store=s,client=c)
 
-    fp.points += points
 
-    fp.save()
+    today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+    today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+    t = Transaction.objects.filter(client=c, store=s, generatedOn__range=(today_min, today_max))
+    
+    if not t:
+        fp.points += points
+        fp.save()
+        return fp.points
+    else:
+        return None
+    
 
-    return fp.points
 
 
 def debitClient(store_id,client_hash,products):
