@@ -4,6 +4,8 @@ import api.services as serv
 from api.errors import *
 from api.models import *
 from django.views.decorators.http import require_http_methods
+from datetime import datetime
+from random import random
 
 # Create your views here.
 
@@ -175,4 +177,7 @@ def generateQRCode():
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
 
-    
+    client = Client.objects.get(request.session['client_id'])
+
+    date=datetime.timestamp(datetime.now())
+    hash = hashlib.sha1().update(random())
