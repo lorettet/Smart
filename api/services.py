@@ -52,7 +52,8 @@ def getStoreProducts(store_id):
 def addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity):
     try:
         store = Store.objects.get(id=store_id)
-        p = Product.objects.create(pName,pDescription,pCategory,store,pPoints,pQuantity)
+        c = Category.objects.get(name=pCategory)
+        p = Product.objects.create(name=pName,description=pDescription,category=c,store=store,points=pPoints,quantity=pQuantity)
         p.save()
     except:
         return None

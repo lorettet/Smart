@@ -95,8 +95,8 @@ def add_product_to_store(request):
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
-        pPoints = request.POST['product_points']
-        pQuantity = request.POST['product_quantity']
+        pPoints = int(request.POST['product_points'])
+        pQuantity = int(request.POST['product_quantity'])
 
     except KeyError:
         return JsonResponse(errorJson('require fields : user_id(session), product_name, product_description, product_category, product_points, product_quantity'),status=400)
@@ -181,4 +181,7 @@ def generateQRCode(request):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
 
-    return HttpResponse(serv.generateQRCode(request.session['user_id']))
+    rep = HttpResponse(serv.generateQRCode(request.session['user_id']))
+    if rep == None:
+        return HttpResponse('false')
+    return HttpResponse(rep)

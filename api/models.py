@@ -64,7 +64,7 @@ class Client(models.Model):
     password = models.CharField(max_length=50,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
     code = models.CharField(max_length=70,null=True)
-    generatedOn = models.DateField(null=True)
+    generatedOn = models.DateTimeField(null=True)
 
 class FidelityPoints(models.Model):
     @classmethod
@@ -96,7 +96,7 @@ class Category(models.Model):
                 }
         return json
 
-    name = models.CharField(max_length=30,null=False)
+    name = models.CharField(max_length=30,null=False,unique=True)
     description = models.CharField(max_length=100,null=False)
 
 class Product(models.Model):
@@ -153,4 +153,3 @@ class Transaction(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     validatedOn = models.DateField(null=True)
     #liste produits
-
