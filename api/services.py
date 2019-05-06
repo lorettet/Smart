@@ -131,20 +131,42 @@ def debitClient(store_id,client_hash,products):
         return None
     
     try:
-        c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.now()-datetime.timedelta(minutes=10)))
+        c = Client.objects.filter(code=client_hash, generatedOn__gte=(datetime.datetime.now()-datetime.timedelta(minutes=10)))
     except Client.DoesNotExist:
         return None
 
-    validatedOn = datetime.now()
+    transactionPoints = 0
+    for p in products:
+        pId = p['product']
+        pQuantity = p['quantity']
+
+        product = Product.objects.get(id=pId)
+
+        transactionPoints += (product.points * pQuantity)
 
     try:
-        t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
-
-        for p in products:
-            transactionProduct = p['product']
-            transactionQuantity = p['quantity']
-            tp = TransactionProduct.objects.create(transaction=transaction, product=product, quantity=quantity)
+        fp = FidelityPoints.objects.get(store=s,client=c)
     except:
+        return None
+
+    if(transactionPoints <= fp.points):
+        validatedOn = datetime.now()
+
+        try:
+            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
+
+        
+            for p in products:
+                transactionProduct = p['product']
+                transactionQuantity = p['quantity']
+                tp = TransactionProduct.objects.create(transaction=transaction, product=product, quantity=quantity)
+        
+        except:
+            return None
+
+        fp.points -= transactionPoints
+        
+    else:
         return None
 
     return t
