@@ -97,7 +97,7 @@ def removeProduct(product_id,store_id):
         return None
 
 
-def creditClient(store_id,client_id,points):
+def creditClient(store_id,client_id):
     try:
         s = Store.objects.get(id=store_id)
     except Store.DoesNotExist:
@@ -110,13 +110,12 @@ def creditClient(store_id,client_id,points):
 
     fp = FidelityPoints.objects.get_or_create(store=s,client=c)
 
-
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
     t = Transaction.objects.filter(client=c, store=s, generatedOn__range=(today_min, today_max))
 
     if not t:
-        fp.points += points
+        fp.points += s.givenPoints
         fp.save()
         return fp.points
     else:

@@ -6,12 +6,12 @@ import datetime
 
 class Store(models.Model):
     @classmethod
-    def create(cls, name, email, password, city, code, address, lat, lon):
-        store = cls(name=name, email=email, password=password, city=city, code=code, address=address, lat=lat, lon=lon)
+    def create(cls, name, email, password, city, code, address, lat, lon, givenPoints):
+        store = cls(name=name, email=email, password=password, city=city, code=code, address=address, lat=lat, lon=lon, givenPoints=givenPoints)
         return store
 
     def __str__(self):
-        return self.name + ' ('+self.email+', '+self.city+', '+self.code+', '+self.address+', '+str(self.lat)+' '+str(self.lon)+')'
+        return self.name + ' ('+self.email+', '+self.city+', '+self.code+', '+self.address+', '+str(self.lat)+' '+str(self.lon)+' '+str(self.givenPoints)+')'
 
     def getJson(self):
         json = {
@@ -24,17 +24,19 @@ class Store(models.Model):
                 'address':self.address,
                 'lat':self.lat,
                 'lon':self.lon,
+                'givenPoints':self.givenPoints,
                 }
         return json
 
-    name = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
+    name = models.CharField(max_length=30,null=False)
     city = models.CharField(max_length=20,null=False)
     code = models.CharField(max_length=10,null=False)
     address = models.CharField(max_length=40,null=False)
     lat = models.DecimalField(max_digits=15, decimal_places=6)
     lon = models.DecimalField(max_digits=15, decimal_places=6)
+    givenPoints = models.IntegerField(default=0) 
 
 class Client(models.Model):
     @classmethod
@@ -55,10 +57,10 @@ class Client(models.Model):
                 }
         return json
 
-    firstname = models.CharField(max_length=30,null=False)
-    lastname = models.CharField(max_length=30,null=False)
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)
+    firstname = models.CharField(max_length=30,null=False)
+    lastname = models.CharField(max_length=30,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
     code = models.CharField(max_length=70,null=True)
     generatedOn = models.DateTimeField(null=True)

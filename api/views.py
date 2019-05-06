@@ -165,12 +165,11 @@ def credit(request):
         store_id = request.session['user_id']
 
         client_id = request.POST['client_id']
-        points = request.POST['points']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(in session), client_id, points'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), client_id'),status=400)
 
-    creditSuccessfull = serv.creditClient(store_id,client_id,points)
+    creditSuccessfull = serv.creditClient(store_id,client_id)
     if creditSuccessfull is None:
         return HttpResponse('false')
     else:
