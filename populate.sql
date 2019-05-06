@@ -21,11 +21,11 @@ INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoin
 
 
 -- Categories
-INSERT INTO api_category(id,description,name) VALUES(1,'Pain','C''est juste du pain hein...');
-INSERT INTO api_category(id,description,name) VALUES(2,'Repas','Assortiment');
-INSERT INTO api_category(id,description,name) VALUES(3,'Sushi','Riz gluant');
-INSERT INTO api_category(id,description,name) VALUES(4,'Viennoiserie','Produit de Vienne (Autriche)');
-INSERT INTO api_category(id,description,name) VALUES(5,'Biere','Boisson à base malte d''orge');
+INSERT INTO api_category(id,name,description) VALUES(1,'Pain','C''est juste du pain hein...');
+INSERT INTO api_category(id,name,description) VALUES(2,'Repas','Assortiment');
+INSERT INTO api_category(id,name,description) VALUES(3,'Sushi','Riz gluant');
+INSERT INTO api_category(id,name,description) VALUES(4,'Viennoiserie','Produit de Vienne (Autriche)');
+INSERT INTO api_category(id,name,description) VALUES(5,'Biere','Boisson à base malte d''orge');
 
 
 -- Points de fidelite
@@ -46,6 +46,21 @@ INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id
 
 -- Produit model
 --CREATE TABLE IF NOT EXISTS "api_productmodel" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(30) NOT NULL, "description" varchar(100) NOT NULL, "category_id" integer NOT NULL REFERENCES "api_category" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(1,'Baguette','du pain mais sous forme de baguette',1);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(2,'Croustipain','du pain qui croustille',1);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(3,'Pain aux cereales','du pain mais sous forme de baguette',1);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(4,'Trefle','un trefle un pain, wtf',1);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(5,'Baguette campagnarde','ça sent bon la campagne',1);
+
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(6,'Croustilune','ça a la forme de la lune et ça croustille, tu t''attendais à quoi ?',4);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(7,'Brioche','ça croustille pas',4);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(8,'Croissant','comme un croustilune mais c''est un croissant',4);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(9,'Pain au chocolat','parce que la chocolatine ça existe pas',4);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(10,'Chausson au pomme','c''est bon',4);
+
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(11,'Kwak','kwakwakwakwak',5);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(12,'Lagunitas','Bière IPA des US',5);
+INSERT INTO api_productmodel(id,name,description,category_id) VALUES(13,'Triple K','Bière à haute fermentation',5);
 
 -- Transactions
 --CREATE TABLE IF NOT EXISTS "api_transaction" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "validatedOn" date NULL, "client_id" integer NOT NULL REFERENCES "api_client" ("id") DEFERRABLE INITIALLY DEFERRED, "store_id" integer NOT NULL REFERENCES "api_store" ("id") DEFERRABLE INITIALLY DEFERRED);
