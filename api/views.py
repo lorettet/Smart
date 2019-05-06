@@ -214,3 +214,7 @@ def getPointsForClient(request, client_id):
     except KeyError:
         return JsonResponse(errorJson('Need to login'),status=400)
     return HttpResponse(serv.getPointsForClient(store_id,client_id))
+
+@require_http_methods(['POST'])
+def getAllProductModels(request):
+    return JsonResponse(serv.getAllProductModels())

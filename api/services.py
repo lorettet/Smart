@@ -112,13 +112,13 @@ def creditClient(store_id,client_id):
 
     fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)
 
-    settings.TIME_ZONE        
+    settings.TIME_ZONE
 
     today_min = make_aware(datetime.combine(date.today(), time.min))
     print(today_min)
     today_max = make_aware(datetime.combine(date.today(), time.max))
     print(today_max)
-    
+
     print(fp.lastTimeCredited)
     if((fp.lastTimeCredited is not None) and (fp.lastTimeCredited>=today_min and fp.lastTimeCredited<=today_max)):
         return None
@@ -139,7 +139,7 @@ def debitClient(store_id,transaction):
 
     client_hash = transaction['client_hash']
 
-    settings.TIME_ZONE        
+    settings.TIME_ZONE
     debitTime = make_aware(datetime.now())
 
     clientList = Client.objects.filter(code=client_hash, generatedOn__gte=(debitTime-timedelta(minutes=10)))
@@ -175,11 +175,11 @@ def debitClient(store_id,transaction):
 
     if(transactionPoints <= fp.points):
         #validatedOn = datetime.now()
-        settings.TIME_ZONE        
+        settings.TIME_ZONE
         validatedOn = make_aware(datetime.now())
 
         try:
-            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)        
+            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
             t.save()
         except:
             print("couldn't create transaction")
@@ -202,7 +202,7 @@ def debitClient(store_id,transaction):
 
         c.code = None
         c.save()
-        
+
     else:
         print("not enough points")
         return None
@@ -216,7 +216,7 @@ def generateQRCode(client_id):
     except Store.DoesNotExist:
         return None
 
-    settings.TIME_ZONE        
+    settings.TIME_ZONE
     genTime = make_aware(datetime.now())
 
     date=datetime.timestamp(genTime)
@@ -237,3 +237,6 @@ def getPointsForClient(store_id,client_id):
     except FidelityPoints.DoesNotExist:
         return 0
     return points.points
+
+def getAllProductModels():
+    return {'modelProducts':[prod.getJson() for prod in ProductModel.objects.all()]}
