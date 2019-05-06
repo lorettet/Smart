@@ -4,8 +4,7 @@ import api.services as serv
 from api.errors import *
 from api.models import *
 from django.views.decorators.http import require_http_methods
-from datetime import datetime
-from random import random
+
 
 # Create your views here.
 
@@ -52,7 +51,7 @@ def get_stores_all(request):
 def get_store_infos(request,store_id):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-    
+
     store = serv.getStore(store_id)
     if store is None:
         return JsonResponse(errorJson('id de magasin inexistant'))
@@ -92,7 +91,7 @@ def add_product_to_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
@@ -117,7 +116,7 @@ def update_product(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
@@ -143,7 +142,7 @@ def remove_product_from_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
 
     except KeyError:
@@ -164,7 +163,7 @@ def credit(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         client_id = request.POST['client_id']
         points = request.POST['points']
 
@@ -177,37 +176,9 @@ def credit(request):
     else:
         return HttpResponse('true')
 
-'''
 @require_http_methods(['POST'])
-def generateQRCode():
+def generateQRCode(request):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
 
-<<<<<<< HEAD
-    client = Client.objects.get(request.session['client_id'])
-
-    date=datetime.timestamp(datetime.now())
-    hash = hashlib.sha1().update(random())
-=======
-
-@require_http_methods(['POST'])
-def debit(request):
-    if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
-
-    try:
-        store_id = request.session['user_id']
-        
-        client_id = request.POST['client_id']
-        points = request.POST['points']
-
-    except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(session), client_id, points'),status=400)
-
-    creditSuccessfull = serv.creditClient(store_id,client_id,points)
-    if creditSuccessfull is None:
-        return HttpResponse('false')
-    else:
-        return HttpResponse('true')
-'''
->>>>>>> 2592c5407d5861a875c66c84dea15824e1c03e0f
+    return HttpResponse(serv.generateQRCode(request.session['user_id']))
