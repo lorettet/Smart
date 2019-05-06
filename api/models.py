@@ -88,6 +88,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name+' ('+self.description+')'
 
+    def getJson(self):
+        json = {
+                'id':self.id,
+                'name':self.name,
+                'description':self.description,
+                }
+        return json
+
     name = models.CharField(max_length=30,null=False)
     description = models.CharField(max_length=100,null=False)
 
@@ -144,3 +152,5 @@ class Transaction(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     validatedOn = models.DateField(null=True)
+    #liste produits
+
