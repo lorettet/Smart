@@ -79,8 +79,8 @@ class FidelityPoints(models.Model):
 class Category(models.Model):
     @classmethod
     def create(cls, name, description):
-        client = cls(name=name, description=description)
-        return client
+        category = cls(name=name, description=description)
+        return category
 
     def __str__(self):
         return self.name+' ('+self.description+')'
@@ -99,8 +99,8 @@ class Category(models.Model):
 class Product(models.Model):
     @classmethod
     def create(cls, name, description, category, store, points, quantity):
-        client = cls(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
-        return client
+        product = cls(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
+        return product
 
     def __str__(self):
         return self.name+' ('+self.description+', '+self.category.name+', '+str(self.store)+', '+str(self.points)+', '+str(self.quantity)+')'
@@ -126,8 +126,8 @@ class Product(models.Model):
 class ProductModel(models.Model):
     @classmethod
     def create(cls, name, description, category):
-        client = cls(name=name, description=description, category=category)
-        return client
+        productModel = cls(name=name, description=description, category=category)
+        return productModel
 
     def __str__(self):
         return self.name+' ('+self.description+', '+self.category.name+')'
@@ -139,15 +139,27 @@ class ProductModel(models.Model):
 
 class Transaction(models.Model):
     @classmethod
-    def create(cls, name, description, category, store, points, quantity):
-        client = cls(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
-        return client
+    def create(cls, client, store, validatedOn):
+        transaction = cls(client=client, store=store, validatedOn=validatedOn)
+        return transaction
 
     def __str__(self):
-        return ''
+        return str(self.client)+' ('+self.store.name+' : '+str(self.validatedOn)+')'
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    validatedOn = models.DateField(null=True)
-    #liste produits
+    validatedOn = models.DateTimeField(null=True)
+    products = models.ManyToManyField(Product, through='TransactionProduct')
 
+class TransactionProduct(models.Model):
+    @classmethod
+    def create(cls, transaction, product, quantity):
+        transactionProducts = cls(transaction=transaction, product=product, quantity=quantity)
+        return transactionProducts
+
+    def __str__(self):
+        return str(self.transaction)+' ('+self.product.name+' : '+str(self.quantity)+')'
+
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)

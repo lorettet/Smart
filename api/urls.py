@@ -16,4 +16,5 @@ urlpatterns = [
     path('me/products/remove', views.remove_product_from_store, name='removeProductFromStore'),
     path('transaction/credit', views.credit, name='credit'),
     path('transaction/debit', views.debit, name='debit'),
+    path('me/qrcode', views.generateQRCode, name='generateQRCode'),
 ]

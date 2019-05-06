@@ -1,4 +1,8 @@
 from api.models import *
+from datetime import datetime
+from random import random
+from hashlib import sha1
+import struct
 
 def login(email, password):
     try:
@@ -52,7 +56,7 @@ def addProduct(pName,pDescription,pCategory,store_id,pPoints,pQuantity):
         p.save()
     except:
         return None
-    
+
     return p
 
 
@@ -68,7 +72,7 @@ def updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints,pQuan
         try:
             c = Category.objects.get(name=pCategory)
         except Category.DoesNotExist:
-            return None        
+            return None
         p.category = c
         p.points = pPoints
         p.quantity = pQuantity
@@ -76,7 +80,7 @@ def updateProduct(product_id,pName,pDescription,pCategory,store_id,pPoints,pQuan
         p.save()
     else:
         return None
-    
+
     return p
 
 
@@ -97,7 +101,7 @@ def creditClient(store_id,client_id,points):
         s = Store.objects.get(id=store_id)
     except Store.DoesNotExist:
         return None
-    
+
     try:
         c = Client.objects.get(id=client_id)
     except Client.DoesNotExist:
@@ -106,7 +110,7 @@ def creditClient(store_id,client_id,points):
     fp = FidelityPoints.objects.get_or_create(store=s,client=c)
 
     fp.points += points
-    
+
     fp.save()
 
     return fp.points
@@ -123,7 +127,35 @@ def debitClient(store_id,client_hash,products):
     except Client.DoesNotExist:
         return None
 
-    t = Transaction.objects.create(name=name, description=description, category=category, store=store, points=points, quantity=quantity)
+    validatedOn = datetime.now()
+
+    try:
+        t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
+
+        for p in products:
+            transactionProduct = p['product']
+            transactionQuantity = p['quantity']
+            tp = TransactionProduct.objects.create(transaction=transaction, product=product, quantity=quantity)
+    except:
+        return None
 
     return t
+
     
+def generateQRCode(client_id):
+    try:
+        client = Client.objects.get(id=client_id)
+    except Store.DoesNotExist:
+        return None
+
+    date=datetime.timestamp(datetime.now())
+    m = sha1()
+    m.update(struct.pack('f',random()))
+    hash = m.hexdigest()
+
+    code = hash+':'+str(date)
+    client.code = hash
+    client.generatedOn = datetime.fromtimestamp(date)
+    client.save()
+
+    return code

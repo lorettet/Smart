@@ -5,6 +5,7 @@ from api.errors import *
 from api.models import *
 from django.views.decorators.http import require_http_methods
 
+
 # Create your views here.
 
 def index(request):
@@ -50,7 +51,7 @@ def get_stores_all(request):
 def get_store_infos(request,store_id):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-    
+
     store = serv.getStore(store_id)
     if store is None:
         return JsonResponse(errorJson('id de magasin inexistant'))
@@ -90,12 +91,12 @@ def add_product_to_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
         pCategory = request.POST['product_category']
-        pPoints = request.POST['product_points']
-        pQuantity = request.POST['product_quantity']
+        pPoints = int(request.POST['product_points'])
+        pQuantity = int(request.POST['product_quantity'])
 
     except KeyError:
         return JsonResponse(errorJson('require fields : user_id(in session), product_name, product_description, product_category, product_points, product_quantity'),status=400)
@@ -115,7 +116,7 @@ def update_product(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
         pName = request.POST['product_name']
         pDescription = request.POST['product_description']
@@ -141,7 +142,7 @@ def remove_product_from_store(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         product_id = request.POST['product_id']
 
     except KeyError:
@@ -162,7 +163,7 @@ def credit(request):
 
     try:
         store_id = request.session['user_id']
-        
+
         client_id = request.POST['client_id']
         points = request.POST['points']
 
@@ -175,12 +176,13 @@ def credit(request):
     else:
         return HttpResponse('true')
 
-'''
 @require_http_methods(['POST'])
-def generateQRCode():
+def generateQRCode(request):
+    pass
+    '''
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
-'''
+    '''
 
 @require_http_methods(['POST'])
 def debit(request):
