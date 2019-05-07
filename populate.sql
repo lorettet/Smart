@@ -25,7 +25,10 @@ INSERT INTO api_category(id,name,description) VALUES(1,'Pain','C''est juste du p
 INSERT INTO api_category(id,name,description) VALUES(2,'Repas','Assortiment');
 INSERT INTO api_category(id,name,description) VALUES(3,'Sushi','Riz gluant');
 INSERT INTO api_category(id,name,description) VALUES(4,'Viennoiserie','Produit de Vienne (Autriche)');
-INSERT INTO api_category(id,name,description) VALUES(5,'Biere','Boisson à base malte d''orge');
+INSERT INTO api_category(id,name,description) VALUES(5,'Bière','Boisson à base malte d''orge');
+INSERT INTO api_category(id,name,description) VALUES(6,'Légume','C''est des legumes...');
+INSERT INTO api_category(id,name,description) VALUES(7,'Fruit','C''est des fruits');
+INSERT INTO api_category(id,name,description) VALUES(8,'Autre','Autres produits');
 
 
 -- Points de fidelite
