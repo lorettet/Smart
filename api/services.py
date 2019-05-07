@@ -166,9 +166,6 @@ def debitClient(store_id,transaction):
         pQuantity = p['quantity']
 
         product = Product.objects.get(id=pId)
-        print(product)
-        print(product.points)
-        print(pQuantity)
 
         transactionPoints += (product.points * pQuantity)
 
@@ -203,8 +200,12 @@ def debitClient(store_id,transaction):
                 tp.save()
 
                 ## METTRE A JOUR STOCK MARCHAND
+                print(transactionProduct)
+                print(transactionProduct.quantity)
+                print(transactionQuantity)
                 transactionProduct.quantity -= transactionQuantity
                 if(transactionProduct.quantity < 0):
+                    print('not enough products')
                     return None
                 transactionProduct.save()
 
