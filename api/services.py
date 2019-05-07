@@ -227,9 +227,14 @@ def generateQRCode(client_id):
 
     return client.generateQRCode()
 
-def getPointsForClient(store_id,client_id):
+def getPointsForClient(store_id,hash):
+
     try:
-        points = FidelityPoints.objects.get(client=client_id, store=store_id)
+        client = Client.objects.get(hash=hash)
+    except Client.DoesNotExist:
+        return None
+    try:
+        return FidelityPoints.objects.get(client=client.id,store=store_id).points
     except FidelityPoints.DoesNotExist:
         return 0
     return points.points
@@ -247,3 +252,4 @@ def updateClientInfo(client_id,firstname,lastname,password, email):
     client.firstname=firstname
     client.password=password
     client.save()
+    return client

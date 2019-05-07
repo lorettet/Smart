@@ -205,16 +205,19 @@ def debit(request):
         return HttpResponse('true')
 
 @require_http_methods(['POST'])
-def getPointsForClient(request, client_id):
+def getPointsForClient(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return HttpResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
-
+        hash = request.POST['hash']
     except KeyError:
         return JsonResponse(errorJson('Need to login'),status=400)
-    return HttpResponse(serv.getPointsForClient(store_id,client_id))
+    points = serv.getPointsForClient(store_id,hash)
+    if points is None:
+        return HttpResponse('false')
+    return HttpResponse(points)
 
 @require_http_methods(['POST'])
 def getAllProductModels(request):
@@ -233,12 +236,16 @@ def updateClientInfo(request):
     if(request.session['user_type']=='store'):
         return HttpResponse(errors.errorJson('Store not allowed'),status=400)
 
-    firstname = request.POST['first_name']
-    lastname = request.POST['last_name']
-    password = request.POST['password']
-    email = request.POST['email']
+    client_id = request.session['user_id']
+    firstname = request.POST['client_firstname']
+    lastname = request.POST['client_lastname']
+    password = request.POST['client_password']
+    email = request.POST['client_email']
 
-    if serv.updateClientInfo(client_id,):
-        return JsonResponse(successJson('Vos informations ont bien été mises à jour'))
+    client = serv.updateClientInfo(client_id,firstname,lastname,password,email)
+    if client:
+        rep = successJson('Vos informations ont bien été mises à jour')
+        rep['client'] = client.getJson()
+        return JsonResponse(rep)
     else:
         return JsonResponse(errorJson())
