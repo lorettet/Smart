@@ -105,7 +105,7 @@ def creditClient(store_id,client_hash):
     except Store.DoesNotExist:
         return 'storeNotFound'
 
-    settings.TIME_ZONE        
+    settings.TIME_ZONE
     creditTime = make_aware(datetime.now())
 
     clientList = Client.objects.filter(hash=client_hash, generatedOn__gte=(creditTime-timedelta(minutes=10)))
@@ -116,13 +116,13 @@ def creditClient(store_id,client_hash):
         c = clientList[0]
         print(c)
 
-    fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)       
+    fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)
 
     today_min = make_aware(datetime.combine(date.today(), time.min))
     print(today_min)
     today_max = make_aware(datetime.combine(date.today(), time.max))
     print(today_max)
-    
+
     print(fp.lastTimeCredited)
     if((fp.lastTimeCredited is not None) and (fp.lastTimeCredited>=today_min and fp.lastTimeCredited<=today_max)):
         print("already credited today")
@@ -146,7 +146,7 @@ def debitClient(store_id,transaction):
 
     client_hash = transaction['client_hash']
 
-    settings.TIME_ZONE        
+    settings.TIME_ZONE
     debitTime = make_aware(datetime.now())
 
     clientList = Client.objects.filter(hash=client_hash, generatedOn__gte=(debitTime-timedelta(minutes=10)))
@@ -183,11 +183,11 @@ def debitClient(store_id,transaction):
 
     if(transactionPoints <= fp.points):
         #validatedOn = datetime.now()
-        settings.TIME_ZONE        
+        settings.TIME_ZONE
         validatedOn = make_aware(datetime.now())
 
         try:
-            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)        
+            t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
             t.save()
         except:
             print("couldn't create transaction")
@@ -212,7 +212,7 @@ def debitClient(store_id,transaction):
 
         c.hash = None
         c.save()
-        
+
     else:
         print("not enough points")
         return None
@@ -226,20 +226,7 @@ def generateQRCode(client_id):
     except Store.DoesNotExist:
         return None
 
-    settings.TIME_ZONE        
-    genTime = make_aware(datetime.now())
-
-    date=datetime.timestamp(genTime)
-    m = sha1()
-    m.update(struct.pack('f',random()))
-    hash = m.hexdigest()
-
-    code = hash+':'+str(date)
-    client.hash = hash
-    client.generatedOn = datetime.fromtimestamp(date)
-    client.save()
-
-    return code
+    return client.generateQRCode()
 
 def getPointsForClient(store_id,client_id):
     try:
@@ -247,3 +234,17 @@ def getPointsForClient(store_id,client_id):
     except FidelityPoints.DoesNotExist:
         return 0
     return points.points
+
+def getAllProductModels():
+    return {'modelProducts':[prod.getJson() for prod in ProductModel.objects.all()]}
+
+def getPurchaseRecords(client_id):
+    return {'Records': [{'store':x.store.getJson(),'validatedOn':x.validatedOn,'products':[{'product':y.getJson(),'quantity':TransactionProduct.objects.get(transaction=x.id,product=y.id).quantity} for y in x.products.all()]} for x in Transaction.objects.filter(client=client_id)]}
+
+def updateClientInfo(client_id,firstname,lastname,password, email):
+    client = Client.objects.get(id=client_id)
+    client.email=email
+    client.lastname=lastname
+    client.firstname=firstname
+    client.password=password
+    client.save()

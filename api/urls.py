@@ -18,4 +18,8 @@ urlpatterns = [
     path('transaction/credit', views.credit, name='credit'),
     path('transaction/debit', views.debit, name='debit'),
     path('me/qrcode', views.generateQRCode, name='generateQRCode'),
+    path('productmodels',views.getAllProductModels, name='getAllProductModels'),
+    path('me/records',views.getPurchaseRecords, name='getPurchaseRecords'),
+    path('me/update',views.updateClientInfo, name='updateClientInfo'),
+
 ]
