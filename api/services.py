@@ -103,7 +103,7 @@ def creditClient(store_id,client_hash):
     try:
         s = Store.objects.get(id=store_id)
     except Store.DoesNotExist:
-        return None
+        return 'storeNotFound'
 
     settings.TIME_ZONE        
     creditTime = make_aware(datetime.now())
@@ -111,7 +111,7 @@ def creditClient(store_id,client_hash):
     clientList = Client.objects.filter(hash=client_hash, generatedOn__gte=(creditTime-timedelta(minutes=10)))
     if not clientList:
         print("no client found or qr code expired")
-        return None
+        return 'qrcode'
     else:
         c = clientList[0]
         print(c)
@@ -125,14 +125,15 @@ def creditClient(store_id,client_hash):
     
     print(fp.lastTimeCredited)
     if((fp.lastTimeCredited is not None) and (fp.lastTimeCredited>=today_min and fp.lastTimeCredited<=today_max)):
-        return None
+        print("already credited today")
+        return 'fraud'
     else:
         fp.points += s.givenPoints
         fp.lastTimeCredited = make_aware(datetime.now())
         fp.save()
         c.hash = None
         c.save()
-        return fp.points
+        return 'success'
 
 
 def debitClient(store_id,transaction):

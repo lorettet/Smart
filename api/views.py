@@ -171,10 +171,7 @@ def credit(request):
         return JsonResponse(errorJson('require fields : user_id(in session), client_hash'),status=400)
 
     creditSuccessfull = serv.creditClient(store_id,client_hash)
-    if creditSuccessfull is None:
-        return HttpResponse('false')
-    else:
-        return HttpResponse('true')
+    return HttpResponse(creditSuccessfull)
 
 @require_http_methods(['POST'])
 def generateQRCode(request):
