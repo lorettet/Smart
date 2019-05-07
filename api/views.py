@@ -238,12 +238,11 @@ def getPurchaseRecords(request):
 def updateInfo(request):
     if(request.session['user_type']=='store'):
         store_id = request.session['user_id']
-        name = request.POST['store_name']
         givenPoints = request.POST['store_givenPoints']
         saleStart = request.POST['store_saleStart']
         saleEnd = request.POST['store_saleEnd']
 
-        store = serv.updateStoreInfo(store_id,name,givenPoints,saleStart,saleEnd)
+        store = serv.updateStoreInfo(store_id,givenPoints,saleStart,saleEnd)
         if store:
             rep = successJson('Vos informations ont bien été mises à jour')
             rep['store'] = store.getJson()
