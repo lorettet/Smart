@@ -197,9 +197,9 @@ def debit(request):
 
     debitSuccessfull = serv.debitClient(store_id,transaction)
     if debitSuccessfull is None:
-        return HttpResponse('false')
+        return JsonResponse(errorJson('Erreur : debit impossible'))
     else:
-        return HttpResponse('true')
+        return JsonResponse(successJson())
 
 @require_http_methods(['POST'])
 def getPointsForClient(request):
