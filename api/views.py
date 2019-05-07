@@ -165,12 +165,12 @@ def credit(request):
     try:
         store_id = request.session['user_id']
 
-        client_id = request.POST['client_id']
+        client_hash = request.POST['client_hash']
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(in session), client_id'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), client_hash'),status=400)
 
-    creditSuccessfull = serv.creditClient(store_id,client_id)
+    creditSuccessfull = serv.creditClient(store_id,client_hash)
     if creditSuccessfull is None:
         return HttpResponse('false')
     else:
@@ -192,7 +192,8 @@ def debit(request):
         store_id = request.session['user_id']
 
         #client_hash = request.POST['client_hash']
-        transaction = json.loads(request.body)
+        #transaction = json.loads(request.body)
+        transaction = request.POST['json']
 
     except KeyError:
         return JsonResponse(errorJson('require fields : user_id(in session), transaction(JSON)'),status=400)

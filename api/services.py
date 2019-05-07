@@ -99,20 +99,24 @@ def removeProduct(product_id,store_id):
         return None
 
 
-def creditClient(store_id,client_id):
+def creditClient(store_id,client_hash):
     try:
         s = Store.objects.get(id=store_id)
     except Store.DoesNotExist:
         return None
 
-    try:
-        c = Client.objects.get(id=client_id)
-    except Client.DoesNotExist:
-        return None
-
-    fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)
-
     settings.TIME_ZONE        
+    creditTime = make_aware(datetime.now())
+
+    clientList = Client.objects.filter(hash=client_hash, generatedOn__gte=(creditTime-timedelta(minutes=10)))
+    if not clientList:
+        print("no client found or qr code expired")
+        return None
+    else:
+        c = clientList[0]
+        print(c)
+
+    fp, created = FidelityPoints.objects.get_or_create(store=s,client=c)       
 
     today_min = make_aware(datetime.combine(date.today(), time.min))
     print(today_min)
@@ -126,6 +130,8 @@ def creditClient(store_id,client_id):
         fp.points += s.givenPoints
         fp.lastTimeCredited = make_aware(datetime.now())
         fp.save()
+        c.hash = None
+        c.save()
         return fp.points
 
 
@@ -142,15 +148,16 @@ def debitClient(store_id,transaction):
     settings.TIME_ZONE        
     debitTime = make_aware(datetime.now())
 
-    clientList = Client.objects.filter(code=client_hash, generatedOn__gte=(debitTime-timedelta(minutes=10)))
+    clientList = Client.objects.filter(hash=client_hash, generatedOn__gte=(debitTime-timedelta(minutes=10)))
     if not clientList:
-        print("no client found")
+        print("no client found or qr code expired")
         return None
     else:
         c = clientList[0]
         print(c)
 
     products = transaction['products']
+
 
     transactionPoints = 0
     for p in products:
@@ -193,6 +200,8 @@ def debitClient(store_id,transaction):
                 transactionQuantity = p['quantity']
                 tp = TransactionProduct.objects.create(transaction=t, product=transactionProduct, quantity=transactionQuantity)
                 tp.save()
+
+                ## METTRE A JOUR STOCK MARCHAND
         except:
             print("couldn't create transactionProducts")
             return None
@@ -200,7 +209,7 @@ def debitClient(store_id,transaction):
         fp.points -= transactionPoints
         fp.save()
 
-        c.code = None
+        c.hash = None
         c.save()
         
     else:
@@ -225,7 +234,7 @@ def generateQRCode(client_id):
     hash = m.hexdigest()
 
     code = hash+':'+str(date)
-    client.code = hash
+    client.hash = hash
     client.generatedOn = datetime.fromtimestamp(date)
     client.save()
 
