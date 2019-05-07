@@ -88,7 +88,7 @@ class Client(models.Model):
     firstname = models.CharField(max_length=30,null=False)
     lastname = models.CharField(max_length=30,null=False)
     points = models.ManyToManyField(Store, through='FidelityPoints')
-    code = models.CharField(max_length=70,null=True)
+    hash = models.CharField(max_length=70,null=True)
     generatedOn = models.DateTimeField(null=True)
 
 class FidelityPoints(models.Model):

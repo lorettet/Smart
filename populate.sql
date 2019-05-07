@@ -2,13 +2,13 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
 -- Client
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(1,'t.lf@exemple.fr','pass','Theo','Lorette-Froidevaux',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(2,'v.c@exemple.fr','pass','Vincent','Colonges',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(3,'e.b@exemple.fr','pass','Emilie','Borghino',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(4,'pa.c@exemple.fr','pass','PA','Cab',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(5,'pa.g@exemple.fr','pass','PA','Gilles',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(6,'c.d@exemple.fr','pass','Charlotte','Delfosse',NULL,NULL);
-INSERT INTO api_client(id,email,password,firstname,lastname,code,generatedOn) VALUES(7,'m.c@exemple.fr','pass','Martin','Gaboriaud',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(1,'t.lf@exemple.fr','pass','Theo','Lorette-Froidevaux',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(2,'v.c@exemple.fr','pass','Vincent','Colonges',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(3,'e.b@exemple.fr','pass','Emilie','Borghino',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(4,'pa.c@exemple.fr','pass','PA','Cab',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(5,'pa.g@exemple.fr','pass','PA','Gilles',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(6,'c.d@exemple.fr','pass','Charlotte','Delfosse',NULL,NULL);
+INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(7,'m.c@exemple.fr','pass','Martin','Gaboriaud',NULL,NULL);
 
 -- Store
 INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(2,'ninkasi@ninkasi.fr','pass','Ninkasi',45.7786604	,4.8717538,'Villeurbanne','2 Rue Léon Fabre','69100',1);
