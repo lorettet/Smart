@@ -175,7 +175,13 @@ def credit(request):
 
 @require_http_methods(['POST'])
 def generateQRCode(request):
-    rep = serv.generateQRCode(request.session['user_id'])
+    if(request.session['user_type']=='store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+    try:
+        rep = serv.generateQRCode(request.session['user_id'])
+    except KeyError:
+        return JsonResponse(errorJson('require fields : user_id(in session)'),status=400)
+
     if rep == None:
         return HttpResponse('false')
     return JsonResponse(rep)
@@ -231,12 +237,13 @@ def getPurchaseRecords(request):
 @require_http_methods(['POST'])
 def updateInfo(request):
     if(request.session['user_type']=='store'):
-        #return HttpResponse(errors.errorJson('Store not allowed'),status=400)
         store_id = request.session['user_id']
-        name = request.POST['store_name']
-        givenPoints = request.POST['store_givenPoints']
+        name = 'S-SUSHI'#request.POST['store_name']
+        givenPoints = 10#request.POST['store_givenPoints']
+        saleStart = '18:00'#request.POST['store_saleStart']
+        saleEnd = '20:00'#request.POST['store_saleEnd']
 
-        store = serv.updateStoreInfo(store_id,name,givenPoints)
+        store = serv.updateStoreInfo(store_id,name,givenPoints,saleStart,saleEnd)
         if store:
             rep = successJson('Vos informations ont bien été mises à jour')
             rep['store'] = store.getJson()

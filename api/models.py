@@ -11,12 +11,12 @@ import struct
 
 class Store(models.Model):
     @classmethod
-    def create(cls, name, email, password, city, code, address, lat, lon, givenPoints):
-        store = cls(name=name, email=email, password=password, city=city, code=code, address=address, lat=lat, lon=lon, givenPoints=givenPoints)
+    def create(cls, name, email, password, city, code, address, lat, lon, givenPoints, saleStart, saleEnd):
+        store = cls(name=name, email=email, password=password, city=city, code=code, address=address, lat=lat, lon=lon, givenPoints=givenPoints, saleStart=saleStart, saleEnd=saleEnd)
         return store
 
     def __str__(self):
-        return self.name + ' ('+self.email+', '+self.city+', '+self.code+', '+self.address+', '+str(self.lat)+' '+str(self.lon)+' '+str(self.givenPoints)+')'
+        return self.name + ' ('+self.email+', '+self.city+', '+self.code+', '+self.address+', '+str(self.lat)+' '+str(self.lon)+' '+str(self.givenPoints)+' '+str(self.saleStart)+' '+str(self.saleEnd)+')'
 
     def getJson(self):
         json = {
@@ -30,7 +30,9 @@ class Store(models.Model):
                 'lat':self.lat,
                 'lon':self.lon,
                 'givenPoints':self.givenPoints,
-                'password':self.password
+                'password':self.password,
+                'saleStart':self.saleStart,
+                'saleEnd':self.saleEnd
                 }
         return json
 
@@ -43,6 +45,8 @@ class Store(models.Model):
     lat = models.DecimalField(max_digits=15, decimal_places=6)
     lon = models.DecimalField(max_digits=15, decimal_places=6)
     givenPoints = models.IntegerField(default=0)
+    saleStart = models.TimeField(null=True)
+    saleEnd = models.TimeField(null=True)
 
 class Client(models.Model):
     @classmethod

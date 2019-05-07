@@ -269,9 +269,11 @@ def updateClientInfo(client_id,firstname,lastname,password, email):
     client.save()
     return client
 
-def updateStoreInfo(store_id,name,givenPoints):
+def updateStoreInfo(store_id,name,givenPoints,saleStart,saleEnd):
     store = Store.objects.get(id=store_id)
     store.name=name
     store.givenPoints=givenPoints
+    store.saleStart=saleStart
+    store.saleEnd=saleEnd
     store.save()
     return store

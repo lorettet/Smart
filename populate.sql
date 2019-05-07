@@ -11,13 +11,13 @@ INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VA
 INSERT INTO api_client(id,email,password,firstname,lastname,hash,generatedOn) VALUES(7,'m.c@exemple.fr','pass','Martin','Gaboriaud',NULL,NULL);
 
 -- Store
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(2,'ninkasi@ninkasi.fr','pass','Ninkasi',45.7786604	,4.8717538,'Villeurbanne','2 Rue Léon Fabre','69100',1);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(3,'carrefour@carrefour.fr','pass','carrefour',45.775863200000003415,4.8693919000000001062,'Villeurbanne','61 Avenue Roger Salengro','69100',3);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(4,'largot@largot.fr','pass','L''Argot',45.766958999999999948,4.853874300000000197,'Lyon','132 Rue Bugeaud','69006',2);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(5,'ssushi@ssushi.fr','pass','S-SUSHI',45.768209400000003485,45.768209400000003485,'Lyon','23 Rue de Sèze','69006',5);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(6,'cafe203@cafe203.fr','pass','Cafe 203',45.7665855,4.8353581,'Lyon','9 Rue du Garet','69001',1);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(7,'leverdi@leverdi.fr','pass','Restaurant Le Verdi',45.7680629,4.854828,'Lyon','13 Boulevard des Brotteaux','69006',4);
-INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints) VALUES(8,'lahucheauxpains@lahucheauxpains.fr','pass','La Huche aux Pains',45.7766659,4.8739929,'Villeurbanne','78 Avenue Roger Salengro','69100',2);
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(2,'ninkasi@ninkasi.fr','pass','Ninkasi',45.7786604	,4.8717538,'Villeurbanne','2 Rue Léon Fabre','69100',1,'22:00','23:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(3,'carrefour@carrefour.fr','pass','carrefour',45.775863200000003415,4.8693919000000001062,'Villeurbanne','61 Avenue Roger Salengro','69100',3,'20:00','21:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(4,'largot@largot.fr','pass','L''Argot',45.766958999999999948,4.853874300000000197,'Lyon','132 Rue Bugeaud','69006',2,'18:00','20:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(5,'ssushi@ssushi.fr','pass','S-SUSHI',45.768209400000003485,45.768209400000003485,'Lyon','23 Rue de Sèze','69006',5,'20:00','22:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(6,'cafe203@cafe203.fr','pass','Cafe 203',45.7665855,4.8353581,'Lyon','9 Rue du Garet','69001',1,'17:00','19:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(7,'leverdi@leverdi.fr','pass','Restaurant Le Verdi',45.7680629,4.854828,'Lyon','13 Boulevard des Brotteaux','69006',4,'19:00','21:00');
+INSERT INTO api_store(id,email,password,name,lat,lon,city,address,code,givenPoints,saleStart,saleEnd) VALUES(8,'lahucheauxpains@lahucheauxpains.fr','pass','La Huche aux Pains',45.7766659,4.8739929,'Villeurbanne','78 Avenue Roger Salengro','69100',2,'18:00','20:00');
 
 
 -- Categories
