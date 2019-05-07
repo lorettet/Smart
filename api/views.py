@@ -190,7 +190,7 @@ def debit(request):
 
         #client_hash = request.POST['client_hash']
         #transaction = json.loads(request.body)
-        transaction = request.POST['json']
+        transaction = json.loads(request.POST['json'])
 
     except KeyError:
         return JsonResponse(errorJson('require fields : user_id(in session), transaction(JSON)'),status=400)

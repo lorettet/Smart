@@ -39,7 +39,7 @@ INSERT INTO api_fidelitypoints(id,points,client_id,store_id) VALUES(6,12,8,7);
 
 -- Produits
 --INSERT INTO api_product VALUES(id,'Nom','desc',cat_id,nb_points,qte,store_id);
-INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id) VALUES(1,'Baguette','du pain',1,5,10,6);
+INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id) VALUES(1,'Baguette','du pain mais sous forme de baguette',1,5,10,6);
 INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id) VALUES(2,'Une biere','biere',5,20,3,2);
 INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id) VALUES(3,'Maki (x2)','riz gluant avec tranche de saumon',3,5,6,5);
 INSERT INTO api_product(id,name,description,category_id,points,quantity,store_id) VALUES(4,'Croustilune','Viennoiserie en forme de lune',4,1000,6,8);

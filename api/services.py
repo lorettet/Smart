@@ -203,6 +203,11 @@ def debitClient(store_id,transaction):
                 tp.save()
 
                 ## METTRE A JOUR STOCK MARCHAND
+                transactionProduct.quantity -= transactionQuantity
+                if(transactionProduct.quantity < 0):
+                    return None
+                transactionProduct.save()
+
         except:
             print("couldn't create transactionProducts")
             return None
