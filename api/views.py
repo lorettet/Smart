@@ -238,10 +238,10 @@ def getPurchaseRecords(request):
 def updateInfo(request):
     if(request.session['user_type']=='store'):
         store_id = request.session['user_id']
-        name = 'S-SUSHI'#request.POST['store_name']
-        givenPoints = 10#request.POST['store_givenPoints']
-        saleStart = '18:00'#request.POST['store_saleStart']
-        saleEnd = '20:00'#request.POST['store_saleEnd']
+        name = request.POST['store_name']
+        givenPoints = request.POST['store_givenPoints']
+        saleStart = request.POST['store_saleStart']
+        saleEnd = request.POST['store_saleEnd']
 
         store = serv.updateStoreInfo(store_id,name,givenPoints,saleStart,saleEnd)
         if store:
