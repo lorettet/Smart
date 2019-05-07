@@ -1,6 +1,11 @@
 from django.db import models
 from django import forms
-import datetime
+from datetime import datetime
+from django.conf import settings
+from django.utils.timezone import make_aware
+from random import random
+from hashlib import sha1
+import struct
 
 # Create your models here.
 
@@ -25,6 +30,7 @@ class Store(models.Model):
                 'lat':self.lat,
                 'lon':self.lon,
                 'givenPoints':self.givenPoints,
+                'password':self.password
                 }
         return json
 
@@ -36,7 +42,7 @@ class Store(models.Model):
     address = models.CharField(max_length=40,null=False)
     lat = models.DecimalField(max_digits=15, decimal_places=6)
     lon = models.DecimalField(max_digits=15, decimal_places=6)
-    givenPoints = models.IntegerField(default=0) 
+    givenPoints = models.IntegerField(default=0)
 
 class Client(models.Model):
     @classmethod
@@ -54,8 +60,28 @@ class Client(models.Model):
                 'firstname':self.firstname,
                 'lastname':self.lastname,
                 'email':self.email,
+                'password':self.password
                 }
         return json
+
+    def generateQRCode(self):
+        settings.TIME_ZONE
+        genTime = make_aware(datetime.now())
+
+        date=datetime.timestamp(genTime)
+        m = sha1()
+        m.update(struct.pack('f',random()))
+        hash = m.hexdigest()
+
+        code = hash+':'+str(date)
+        self.hash = hash
+        self.generatedOn = datetime.fromtimestamp(date)
+        self.save()
+
+        return {'firstname':self.firstname,
+                'lastname':self.lastname,
+                'hash':self.hash,
+                'generatedOn':self.generatedOn}
 
     email = models.CharField(max_length=50,null=False,unique=True)
     password = models.CharField(max_length=50,null=False)

@@ -216,20 +216,7 @@ def generateQRCode(client_id):
     except Store.DoesNotExist:
         return None
 
-    settings.TIME_ZONE
-    genTime = make_aware(datetime.now())
-
-    date=datetime.timestamp(genTime)
-    m = sha1()
-    m.update(struct.pack('f',random()))
-    hash = m.hexdigest()
-
-    code = hash+':'+str(date)
-    client.code = hash
-    client.generatedOn = datetime.fromtimestamp(date)
-    client.save()
-
-    return code
+    return client.generateQRCode()
 
 def getPointsForClient(store_id,client_id):
     try:
@@ -240,3 +227,14 @@ def getPointsForClient(store_id,client_id):
 
 def getAllProductModels():
     return {'modelProducts':[prod.getJson() for prod in ProductModel.objects.all()]}
+
+def getPurchaseRecords(client_id):
+    return {'Records': [{'store':x.store.getJson(),'validatedOn':x.validatedOn,'products':[{'product':y.getJson(),'quantity':TransactionProduct.objects.get(transaction=x.id,product=y.id).quantity} for y in x.products.all()]} for x in Transaction.objects.filter(client=client_id)]}
+
+def updateClientInfo(client_id,firstname,lastname,password, email):
+    client = Client.objects.get(id=client_id)
+    client.email=email
+    client.lastname=lastname
+    client.firstname=firstname
+    client.password=password
+    client.save()

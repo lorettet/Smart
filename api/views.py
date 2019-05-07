@@ -178,10 +178,10 @@ def credit(request):
 
 @require_http_methods(['POST'])
 def generateQRCode(request):
-    rep = HttpResponse(serv.generateQRCode(request.session['user_id']))
+    rep = serv.generateQRCode(request.session['user_id'])
     if rep == None:
         return HttpResponse('false')
-    return HttpResponse(rep)
+    return JsonResponse(rep)
 
 @require_http_methods(['POST'])
 def debit(request):
@@ -218,3 +218,26 @@ def getPointsForClient(request, client_id):
 @require_http_methods(['POST'])
 def getAllProductModels(request):
     return JsonResponse(serv.getAllProductModels())
+
+
+@require_http_methods(['POST'])
+def getPurchaseRecords(request):
+    if(request.session['user_type']=='Store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+
+    return JsonResponse(serv.getPurchaseRecords(request.session['user_id']))
+
+@require_http_methods(['POST'])
+def updateClientInfo(request):
+    if(request.session['user_type']=='store'):
+        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+
+    firstname = request.POST['first_name']
+    lastname = request.POST['last_name']
+    password = request.POST['password']
+    email = request.POST['email']
+
+    if serv.updateClientInfo(client_id,):
+        return JsonResponse(successJson('Vos informations ont bien été mises à jour'))
+    else:
+        return JsonResponse(errorJson())
