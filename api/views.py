@@ -229,20 +229,36 @@ def getPurchaseRecords(request):
     return JsonResponse(serv.getPurchaseRecords(request.session['user_id']))
 
 @require_http_methods(['POST'])
-def updateClientInfo(request):
+def updateInfo(request):
     if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        #return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        store_id = request.session['user_id']
+        name = request.POST['store_name']
+        givenPoints = request.POST['store_givenPoints']
 
-    client_id = request.session['user_id']
-    firstname = request.POST['client_firstname']
-    lastname = request.POST['client_lastname']
-    password = request.POST['client_password']
-    email = request.POST['client_email']
+        store = serv.updateStoreInfo(store_id,name,givenPoints)
+        if store:
+            rep = successJson('Vos informations ont bien été mises à jour')
+            rep['store'] = store.getJson()
+            return JsonResponse(rep)
+        else:
+            return JsonResponse(errorJson())
 
-    client = serv.updateClientInfo(client_id,firstname,lastname,password,email)
-    if client:
-        rep = successJson('Vos informations ont bien été mises à jour')
-        rep['client'] = client.getJson()
-        return JsonResponse(rep)
+    elif(request.session['user_type']=='client'):
+
+        client_id = request.session['user_id']
+        firstname = request.POST['client_firstname']
+        lastname = request.POST['client_lastname']
+        password = request.POST['client_password']
+        email = request.POST['client_email']
+
+        client = serv.updateClientInfo(client_id,firstname,lastname,password,email)
+        if client:
+            rep = successJson('Vos informations ont bien été mises à jour')
+            rep['client'] = client.getJson()
+            return JsonResponse(rep)
+        else:
+            return JsonResponse(errorJson())
+    
     else:
-        return JsonResponse(errorJson())
+        return HttpResponse(errors.errorJson('User type not allowed'),status=400)

@@ -20,6 +20,6 @@ urlpatterns = [
     path('me/qrcode', views.generateQRCode, name='generateQRCode'),
     path('productmodels',views.getAllProductModels, name='getAllProductModels'),
     path('me/records',views.getPurchaseRecords, name='getPurchaseRecords'),
-    path('me/update',views.updateClientInfo, name='updateClientInfo'),
+    path('me/update',views.updateInfo, name='updateInfo'),
 
 ]

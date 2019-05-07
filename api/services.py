@@ -185,7 +185,6 @@ def debitClient(store_id,transaction):
 
         try:
             t = Transaction.objects.create(client=c, store=s, validatedOn=validatedOn)
-            t.save()
         except:
             print("couldn't create transaction")
             return None
@@ -196,17 +195,17 @@ def debitClient(store_id,transaction):
 
                 transactionProduct = Product.objects.get(id=pId)
                 transactionQuantity = p['quantity']
-                tp = TransactionProduct.objects.create(transaction=t, product=transactionProduct, quantity=transactionQuantity)
-                tp.save()
+                tp = TransactionProduct.objects.create(transaction=t, name=transactionProduct.name, points=transactionProduct.points, quantity=transactionQuantity)
 
                 ## METTRE A JOUR STOCK MARCHAND
                 print(transactionProduct)
-                print(transactionProduct.quantity)
                 print(transactionQuantity)
                 transactionProduct.quantity -= transactionQuantity
                 if(transactionProduct.quantity < 0):
                     print('not enough products')
                     return None
+
+                tp.save()
                 transactionProduct.save()
 
         except:
@@ -214,10 +213,11 @@ def debitClient(store_id,transaction):
             return None
 
         fp.points -= transactionPoints
-        fp.save()
-
         c.hash = None
+
+        fp.save()
         c.save()
+        t.save()
 
     else:
         print("not enough points")
@@ -250,7 +250,15 @@ def getAllProductModels():
     return {'modelProducts':[prod.getJson() for prod in ProductModel.objects.all()]}
 
 def getPurchaseRecords(client_id):
-    return {'Records': [{'store':x.store.getJson(),'validatedOn':x.validatedOn,'products':[{'product':y.getJson(),'quantity':TransactionProduct.objects.get(transaction=x.id,product=y.id).quantity} for y in x.products.all()]} for x in Transaction.objects.filter(client=client_id)]}
+    #return {'Records': [{'store':x.store.getJson(),'validatedOn':x.validatedOn,'products':[{'product':y.getJson(),'quantity':TransactionProduct.objects.get(transaction=x.id,product=y.id).quantity} for y in x.products.all()]} for x in Transaction.objects.filter(client=client_id)]}
+    '''
+    tList = Transaction.objects.filter(client=client_id)
+    for t in tList:
+        tpList = TransactionProduct.objects.filter(transaction=t)
+    '''
+
+    return {'Records': [{'store':t.store.getJson(),'validatedOn':t.validatedOn,'products':[{'product':{'name':tp.name,'points':tp.points},'quantity':tp.quantity} for tp in TransactionProduct.objects.filter(transaction=t)]} for t in Transaction.objects.filter(client=client_id)]}
+
 
 def updateClientInfo(client_id,firstname,lastname,password, email):
     client = Client.objects.get(id=client_id)
@@ -260,3 +268,10 @@ def updateClientInfo(client_id,firstname,lastname,password, email):
     client.password=password
     client.save()
     return client
+
+def updateStoreInfo(store_id,name,givenPoints):
+    store = Store.objects.get(id=store_id)
+    store.name=name
+    store.givenPoints=givenPoints
+    store.save()
+    return store

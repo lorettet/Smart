@@ -178,17 +178,19 @@ class Transaction(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     validatedOn = models.DateTimeField(null=True)
-    products = models.ManyToManyField(Product, through='TransactionProduct')
+    #products = models.ManyToManyField(Product, through='TransactionProduct')
 
 class TransactionProduct(models.Model):
     @classmethod
-    def create(cls, transaction, product, quantity):
-        transactionProducts = cls(transaction=transaction, product=product, quantity=quantity)
-        return transactionProducts
+    def create(cls, transaction, name, points, quantity):
+        transactionProduct = cls(transaction=transaction, name=name, points=points, quantity=quantity)
+        return transactionProduct
 
     def __str__(self):
-        return str(self.transaction)+' ('+self.product.name+' : '+str(self.quantity)+')'
+        return str(self.transaction)+' ('+self.name+' : points:'+str(self.points)+', quantity:'+str(self.quantity)+')'
 
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=30,null=False)
+    points = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)
