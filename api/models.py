@@ -77,9 +77,9 @@ class Client(models.Model):
         m.update(struct.pack('f',random()))
         hash = m.hexdigest()
 
-        code = hash+':'+str(date)
+        #code = hash+':'+str(date)
         self.hash = hash
-        self.generatedOn = datetime.fromtimestamp(date)
+        self.generatedOn = make_aware(datetime.fromtimestamp(date))
         self.save()
 
         return {'firstname':self.firstname,
@@ -186,15 +186,28 @@ class Transaction(models.Model):
 
 class TransactionProduct(models.Model):
     @classmethod
-    def create(cls, transaction, name, points, quantity):
-        transactionProduct = cls(transaction=transaction, name=name, points=points, quantity=quantity)
+    def create(cls, transaction, name, description, category, points, quantity):
+        transactionProduct = cls(transaction=transaction, name=name, description=description, category=category, points=points, quantity=quantity)
         return transactionProduct
 
     def __str__(self):
         return str(self.transaction)+' ('+self.name+' : points:'+str(self.points)+', quantity:'+str(self.quantity)+')'
 
+    def getJson(self):
+        json = {
+                'id':self.id,
+                'name':self.name,
+                'description':self.description,
+                'category':self.category,
+                'points':self.points,
+                'quantity':self.quantity,
+                }
+        return json
+
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=30,null=False)
+    description = models.CharField(max_length=100,null=False)
+    category = models.CharField(max_length=30,null=False)
     points = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)

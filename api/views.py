@@ -199,7 +199,7 @@ def debit(request):
         transaction = json.loads(request.POST['json'])
 
     except KeyError:
-        return JsonResponse(errorJson('require fields : user_id(in session), transaction(JSON)'),status=400)
+        return JsonResponse(errorJson('require fields : user_id(in session), json(JSON)'),status=400)
 
     debitSuccessfull = serv.debitClient(store_id,transaction)
     if debitSuccessfull is None:

@@ -191,25 +191,26 @@ def debitClient(store_id,transaction):
 
         try:
             for p in products:
-                transactionProductId = p['id']
+                pId = p['id']
+                pQuantity = p['quantity']
 
-                transactionProduct = Product.objects.get(id=pId)
-                transactionQuantity = p['quantity']
-                tp = TransactionProduct.objects.create(transaction=t, name=transactionProduct.name, points=transactionProduct.points, quantity=transactionQuantity)
-
-                ## METTRE A JOUR STOCK MARCHAND
-                print(transactionProduct)
-                print(transactionQuantity)
-                transactionProduct.quantity -= transactionQuantity
-                if(transactionProduct.quantity < 0):
+                product = Product.objects.get(id=pId)
+                print(product)
+                
+                tp = TransactionProduct.objects.create(transaction=t, name=product.name, description=product.description, category=product.category.name, points=product.points, quantity=pQuantity)
+                print(tp)
+                
+                product.quantity -= pQuantity
+                if(product.quantity < 0):
                     print('not enough products')
                     return None
 
                 tp.save()
-                transactionProduct.save()
+                product.save()
 
         except:
             print("couldn't create transactionProducts")
+            t.delete()
             return None
 
         fp.points -= transactionPoints
@@ -257,7 +258,7 @@ def getPurchaseRecords(client_id):
         tpList = TransactionProduct.objects.filter(transaction=t)
     '''
 
-    return {'Records': [{'store':t.store.getJson(),'validatedOn':t.validatedOn,'products':[{'product':{'name':tp.name,'points':tp.points},'quantity':tp.quantity} for tp in TransactionProduct.objects.filter(transaction=t)]} for t in Transaction.objects.filter(client=client_id)]}
+    return {'Records': [{'store':t.store.getJson(),'validatedOn':t.validatedOn,'products':[{'product':tp.getJson()} for tp in TransactionProduct.objects.filter(transaction=t)]} for t in Transaction.objects.filter(client=client_id)]}
 
 
 def updateClientInfo(client_id,firstname,lastname,password, email):
