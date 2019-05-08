@@ -51,7 +51,7 @@ def get_stores_all(request):
 @require_http_methods(['POST'])
 def get_store_infos(request,store_id):
     if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        return JsonResponse(errorJson('Store not allowed'),status=400)
 
     store = serv.getStore(store_id)
     if store is None:
@@ -75,20 +75,20 @@ def get_categories_all(request):
 @require_http_methods(['POST'])
 def getFidelityPoints(request,store_id):
     if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        return JsonResponse(errorJson('Store not allowed'),status=400)
     return HttpResponse(serv.getFidelityPoints(request.session['user_id'],store_id))
 
 @require_http_methods(['POST'])
 def getAllFidelityPoints(request):
     if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        return JsonResponse(errorJson('Store not allowed'),status=400)
     return JsonResponse(serv.getAllFidelityPoints(request.session['user_id']))
 
 
 @require_http_methods(['POST'])
 def add_product_to_store(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -113,7 +113,7 @@ def add_product_to_store(request):
 @require_http_methods(['POST'])
 def update_product(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -139,7 +139,7 @@ def update_product(request):
 @require_http_methods(['POST'])
 def remove_product_from_store(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -160,7 +160,7 @@ def remove_product_from_store(request):
 @require_http_methods(['POST'])
 def credit(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -176,7 +176,7 @@ def credit(request):
 @require_http_methods(['POST'])
 def generateQRCode(request):
     if(request.session['user_type']=='store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+        return JsonResponse(errorJson('Store not allowed'),status=400)
     try:
         rep = serv.generateQRCode(request.session['user_id'])
     except KeyError:
@@ -189,7 +189,7 @@ def generateQRCode(request):
 @require_http_methods(['POST'])
 def debit(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errors.errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -210,7 +210,7 @@ def debit(request):
 @require_http_methods(['POST'])
 def getPointsForClient(request):
     if(request.session['user_type']=='client'):
-        return HttpResponse(errorJson('Client not allowed'),status=400)
+        return JsonResponse(errorJson('Client not allowed'),status=400)
 
     try:
         store_id = request.session['user_id']
@@ -229,8 +229,8 @@ def getAllProductModels(request):
 
 @require_http_methods(['POST'])
 def getPurchaseRecords(request):
-    if(request.session['user_type']=='Store'):
-        return HttpResponse(errors.errorJson('Store not allowed'),status=400)
+    if(request.session['user_type']=='store'):
+        return JsonResponse(errorJson('Store not allowed'),status=400)
 
     return JsonResponse(serv.getPurchaseRecords(request.session['user_id']))
 
@@ -267,4 +267,4 @@ def updateInfo(request):
             return JsonResponse(errorJson())
     
     else:
-        return HttpResponse(errors.errorJson('User type not allowed'),status=400)
+        return JsonResponse(errorJson('User type not allowed'),status=400)
