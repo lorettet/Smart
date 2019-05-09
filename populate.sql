@@ -66,7 +66,22 @@ INSERT INTO api_productmodel(id,name,description,category_id) VALUES(12,'Lagunit
 INSERT INTO api_productmodel(id,name,description,category_id) VALUES(13,'Triple K','Bière à haute fermentation',5);
 
 -- Transactions
---CREATE TABLE IF NOT EXISTS "api_transaction" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "validatedOn" date NULL, "client_id" integer NOT NULL REFERENCES "api_client" ("id") DEFERRABLE INITIALLY DEFERRED, "store_id" integer NOT NULL REFERENCES "api_store" ("id") DEFERRABLE INITIALLY DEFERRED);
+--CREATE TABLE IF NOT EXISTS "api_transaction(id,validatedOn,client_id,store_id)" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "validatedOn" date NULL, "client_id" integer NOT NULL REFERENCES "api_client" ("id") DEFERRABLE INITIALLY DEFERRED, "store_id" integer NOT NULL REFERENCES "api_store" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(1,'2019-05-09 06:37:40',6,4);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(2,'2019-05-09 06:37:49',6,4);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(3,'2019-05-09 06:38:12',6,4);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(4,'2019-05-09 07:23:16.938280',6,4);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(5,'2019-05-09 07:26:22.570806',6,4);
+INSERT INTO api_transaction(id,validatedOn,client_id,store_id) VALUES(6,'2019-05-09 07:50:42.489982',2,4);
 
+-- TransactionProduct
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(1,'Maki (x2)','Maki de le journee','Sushi',5,1,1);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(2,'Pomme','Pomme bien mûre','Fruit',3,2,1);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(3,'Croustilune','Viennoiserie en forme de lune','Viennoiserie',4,2,2);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(4,'Pomme','Pomme bien mûre','Fruit',3,5,3);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(5,'Pomme','Pomme bien mûre','Fruit',3,2,4);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(6,'Baguette','Bien Cuite','Pain',1,1,4);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(7,'Maki (x2)','Maki de la journee','Sushi',5,2,5);
+INSERT INTO api_transactionproduct(id,name,description,category,points,quantity,transaction_id) VALUES(8,'Baguette','Bien Cuite','Pain',1,1,6);
 
 COMMIT;
